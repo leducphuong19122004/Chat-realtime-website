@@ -2,7 +2,6 @@
 import express from "express";
 
 function configViewEngine(app) {
-    console.log('config view engine is running');
     app.use(express.static('./src/public')); // public files in public directory which people can see on client site.
     // app.use('/update-file', express.bodyParser()); // tell to the app i dont want to use bodyparser in the route upload-file
 

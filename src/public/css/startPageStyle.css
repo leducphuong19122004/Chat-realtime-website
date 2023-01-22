@@ -1,0 +1,44 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(to right, #3a7bd5, #3a6073);
+    font-family: "Raleway", sans-serif;
+}
+
+.center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.center button {
+    padding: 10px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #222;
+    background: #f5f5f5;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.login-btn {
+    margin-right: 5px;
+}
+
+.signUp-btn {
+    margin-left: 5px;
+}
+
+.welcome {
+    font-size: x-large;
+    text-align: center;
+    font-weight: 200;
+
+}

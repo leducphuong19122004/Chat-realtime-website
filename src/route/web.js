@@ -1,25 +1,28 @@
 import express from 'express';
 import homeController from '../controller/homeController';
+import authController from '../controller/authController';
 import multer from "multer";
 import path from 'path';
-import { nextTick } from 'process';
+const { loggedIn } = require("../services/authMiddleware");
+
 
 
 let router = express.Router();// Use the express.Router class to create modular, mountable route handlers
 
 // This code below will create a router as a module, loads a middleware function in it, defines some routes, and mounts the router module on a path in the main app.
 const initWebRoute = (app) => {
-    console.log('init web route is running');
-    router.get('/', homeController.getHomePage);
-    router.get('/home', homeController.getHomePage);
+    router.get('/', homeController.getStartPage);
+    router.get('/login-form', homeController.getLoginForm);
+    router.get('/signup-form', homeController.getSignupForm);
+    router.get('/home', loggedIn, homeController.getHomePage);
     router.get('/detail/user/:No', homeController.getDetailPage);
     router.get('/delete-user/:No', homeController.deleteUser);
     router.get('/edit/user/:No', homeController.editUserInf);
-    router.post('/create-new-user', homeController.createNewUser);
-    router.post('/update-inf-user', homeController.updateInfUser);
+    router.post('/create-new-user', loggedIn, homeController.createNewUser);
+    router.post('/update-inf-user', loggedIn, homeController.updateInfUser);
 
     // upload file
-    router.get('/upload-file', homeController.getUploadFilePage);
+    router.get('/upload-file', loggedIn, homeController.getUploadFilePage);
 
     //cấu hình lưu trữ file khi upload xong
     const storage = multer.diskStorage({
@@ -50,6 +53,20 @@ const initWebRoute = (app) => {
             })
         },
         homeController.handleMultipleFile);
+
+    // route for login 
+
+
+    router.post('/login', authController.login);
+
+    router.post('/sign-up', authController.register);
+
+    // Auth user only
+    // router.get('/authuseronly', loggedIn, authController.authuseronly);
+
+    // Admin user only
+    // router.get('/adminonly', loggedIn, adminOnly, authController.adminonly);
+
 
     return app.use('/', router)
 }

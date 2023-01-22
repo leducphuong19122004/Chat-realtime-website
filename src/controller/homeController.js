@@ -2,6 +2,9 @@ import connection from '../configs/connectDB';
 import multer from 'multer';
 import { readFile } from '@babel/core/lib/gensync-utils/fs';
 
+let getStartPage = async (req, res) => {
+    return res.render('startPage.ejs')
+}
 let getHomePage = async (req, res) => {
     const [rows, fields] = await connection.execute('SELECT * FROM `mydata01`'); // [rows,fields] is destruturing in javascript
     return res.render('index.ejs', { dataUser: rows })
@@ -47,11 +50,8 @@ let getUploadFilePage = async (req, res) => {
 let handleSingleFile = async (req, res, next) => {
     // req.file contains information of uploaded file
     // req.body contains information of text fields, if there were any
-    console.log('handlingSingleFile is running');
     if (!req.file) {
         return res.send('Please select an image to upload');
-    } else if (err instanceof multer.MulterError) {
-        return res.send('LIMIT_UNEXPECTED_FILE');
     }
     // Display uploaded image for user validation
     res.send(`You have uploaded this image: <hr/><img src="/fileUpload/${req.file.filename}" width="500"><hr /><a href="http://localhost:3000/upload-file">Upload another image</a>`);
@@ -60,7 +60,6 @@ let handleSingleFile = async (req, res, next) => {
 
 let handleMultipleFile = async (req, res) => {
     const files = req.files;
-    console.log(files.length);
     if (files.length == 0) {
         return res.send('Please select an image to upload');
     }
@@ -74,7 +73,16 @@ let handleMultipleFile = async (req, res) => {
     res.send(result);
 }
 
+// login form
+let getLoginForm = (req, res) => {
+    return res.render('login_form.ejs')
+}
+
+let getSignupForm = (req, res) => {
+    return res.render('signupForm.ejs')
+}
 module.exports = {
+    getStartPage,
     getHomePage,
     getDetailPage,
     createNewUser,
@@ -86,4 +94,6 @@ module.exports = {
     getUploadFilePage,
     handleSingleFile,
     handleMultipleFile,
+    getLoginForm,
+    getSignupForm
 }

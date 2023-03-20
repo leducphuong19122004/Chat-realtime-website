@@ -1,42 +1,82 @@
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="css/loginStyle.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>canitoLogin</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="style_for_login_page/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="style_for_login_page/css/canitoLogin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300&family=Poppins:wght@700&display=swap"
+        rel="stylesheet">
 </head>
 
-<body>
-    <div class="popup">
-        <form method="post" action="/login">
-            <a href="/">
-                <div class="close-btn">&times;</div>
-            </a>
-            <div class="form">
-                <h2>Log in</h2>
-                <div class="form-element">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" placeholder="Enter email" required>
-                </div>
-                <div class="form-element">
-                    <label for="password">Password</lable>
-                        <input type="password" id="password" name="password" placeholder="Enter password" required>
-                </div>
-                <div class="form-element">
-                    <input type="checkbox" id="remember-me">
-                    <label for="remember-me">Remember me</label>
-                </div>
-                <div class="form-element">
-                    <button type="submit">Sign in</button>
-                </div>
-                <div class="form-element">
-                    <a href="#">Forgot password ?</a>
+<body style="background: url(&quot;style_for_login_page/img/bg-01.jpg&quot;) top / cover no-repeat;">
+    <form method="post" action="/login">
+        <div>
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <div class="d-flex flex-column justify-content-center" id="login-box">
+                            <hr style="width: 100%;margin-bottom: 3px;margin-top: 0px;">
+                            <div class="email-login" style="background-color:#ffffff;">
+                                <span class="login"
+                                    style="position: relative;font-size: 59px;display: grid;">Login</span>
+                                <input type="email" class="email-imput form-control" style="margin-top:10px;" required
+                                    placeholder="Email" minlength="6" id="emai" name="email">
+                                <input type="password" class="password-input form-control"
+                                    style="margin-top: 10px;height: 46px;" required placeholder="Password" minlength="6"
+                                    id="password" name="password">
+
+                            </div>
+                            <div class="submit-row" style="margin-bottom:8px;padding-top:0px;"><button
+                                    class="btn btn-primary btn-block box-shadow" data-bss-hover-animate="pulse"
+                                    id="submit-id-submit"
+                                    style="font-size: 20px;padding: 5px 12px 0px;padding-top: 5px;width: 458px;min-width: 0px;background: url(&quot;style_for_login_page/img/bg-01.jpg&quot;) no-repeat, #ff8000;background-size: cover, auto;margin-left: 1px;">Login&nbsp;</button>
+                                <div class="d-flex justify-content-between">
+                                    <div class="form-check form-check-inline" id="form-check-rememberMe"><input
+                                            class="form-check-input" type="checkbox" id="formCheck-1" for="remember"
+                                            style="cursor:pointer;" name="check"><label class="form-check-label"
+                                            for="formCheck-1"><span class="label-text">Remeber me</span></label></div><a
+                                        id="forgot-password-link" href="">Forgot password ?</a>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-row align-items-center login-box-seperator-container">
+                                <div class="login-box-seperator"></div>
+                                <div class="login-box-seperator-text">
+                                    <p
+                                        style="margin-bottom:0px;padding-left:10px;padding-right:10px;font-weight:400;color:rgb(201,201,201);">
+                                        Or login using</p>
+                                </div>
+                                <div class="login-box-seperator"></div>
+                            </div>
+                            <div class="login-box-content">
+                                <div class="fb-login box-shadow"><a
+                                        class="d-flex flex-row align-items-center social-login-link"
+                                        href="/auth/facebook"><i class="fa fa-facebook"
+                                            style="margin-left:0px;padding-right:20px;padding-left:22px;width:56px;"></i>Login
+                                        with Facebook</a></div>
+                                <div class="gp-login box-shadow"><a
+                                        class="d-flex flex-row align-items-center social-login-link"
+                                        style="margin-bottom:10px;" href="/auth/google"><i class="fa fa-google"
+                                            style="color:rgb(255,255,255);width:56px;"></i>Login with Google</a></div>
+                            </div>
+                            <div class="d-flex d-xl-flex justify-content-xl-center" id="login-box-footer"
+                                style="padding: 10px 20px;padding-bottom: 78px;padding-top: 0px;"><a href="/signup-form"
+                                    style="color: #ff8000;font-size: 20px;"><br>Have not account yet ? Sign up</a></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </form>
-    </div>
+        </div>
+    </form>
+    <script src="style_for_login_page/js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="style_for_login_page/js/bs-init.js"></script>
 </body>
 
 </html>

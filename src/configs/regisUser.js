@@ -10,6 +10,7 @@ const User = function (user) {
     this.email = user.email;
     this.name = user.name;
     this.password = user.password;
+    this.userID = user.userID;
     this.status = user.status;
     if (typeof user.created_at != 'undefined') {
         this.created_at = user.created_at;
@@ -24,7 +25,7 @@ User.create = async (newUser) => {
     if (count[0] == []) {
         return 1;
     } else {
-        await connection.execute('INSERT INTO information_of_users(username, email, password, mobilenumber) VALUES (?,?,?,?)', [newUser.name, newUser.email, newUser.password, newUser.mobile]);
+        await connection.execute('INSERT INTO information_of_users(userID, username, email, password, mobilenumber) VALUES (?,?,?,?,?)', [newUser.userID, newUser.name, newUser.email, newUser.password, newUser.mobile]);
     }
 
 };

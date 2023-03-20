@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>CodePen - A Pen by leducphuong</title>
+
+</head>
+
+
+<body>
+    <!-- partial:index.partial.html -->
+    <div class="container">
+        <div class="row">
+            <div class="col-1">
+                <video class="video-client" autoplay playsinline style="pointer-events: none;"> </video>
+                <div class="controls">
+                    <img src="https://img.icons8.com/ios-filled/256/minimize-window.png">
+                    <img src="https://img.icons8.com/sf-black-filled/256/video-call.png">
+                    <img src="https://img.icons8.com/external-others-inmotus-design/256/external-Disconnect-phone-operations-and-functions-others-inmotus-design.png"
+                        class="call-icon">
+
+                    <img src="https://img.icons8.com/ios-glyphs/256/microphone.png">
+                    <img src="https://img.icons8.com/material-sharp/256/speaker.png">
+                </div>
+
+            </div>
+            <div class="col-2">
+                <video class="video-host" autoplay muted playsinline style="pointer-events: none;"></video>
+            </div>
+        </div>
+    </div>
+    <!-- partial -->
+
+</body>
+<style>
+    .col-1 {
+        flex-basis: 65%;
+    }
+
+    .col-2 {
+        flex-basis: 33%;
+    }
+
+    .video-client {
+        display: flex;
+        width: 100%;
+        height: 895px;
+        border-radius: 20px;
+    }
+
+    .controls {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .controls img {
+        width: 40px;
+        margin: 20px 10px;
+        cursor: pointer;
+        transition: transform 0.5s;
+    }
+
+    .controls .call-icon {
+        width: 55px;
+    }
+
+    .controls img:hover {
+        transform: translateY(-10px);
+    }
+
+    .video-host {
+        border-radius: 20px;
+        position: absolute;
+        right: 30px;
+        top: 30px;
+        height: 190px;
+    }
+</style>
+<script src="https://unpkg.com/peerjs@1.3.2/dist/peerjs.min.js"></script>
+<script>
+
+    const userID = '<%= userID %>';
+    let friendID = '<%= friendID %>';
+    const myVideo = document.querySelector('.video-host');
+    const peerVideo = document.querySelector('.video-client');
+
+</script>
+<script src="/logicFile/callvideo.js"></script>
+
+</html>

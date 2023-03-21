@@ -8,7 +8,7 @@ import fs from 'fs';
 import { resolve } from 'path';
 import { rejects } from 'assert';
 import { type } from 'os';
-const cloudinary = require('cloudinary').v2;
+import { v2 as cloudinary } from 'cloudinary';
 const client = redis.createClient({
     legacyMode: true
 }); //Thêm lagacyMode để tránh bug là ClientClosedError: The client is closed

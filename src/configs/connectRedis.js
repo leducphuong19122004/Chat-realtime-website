@@ -1,4 +1,4 @@
-const redis = require("redis");
+import redis from 'redis';
 const redisclient = redis.createClient({
     legacyMode: true
 });

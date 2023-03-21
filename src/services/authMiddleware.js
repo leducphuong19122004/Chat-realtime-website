@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
-require('dotenv').config();
+import dotenv from 'dotenv';
+dotenv.config;
 import { resolve } from 'path';
 import util from 'util';
 import * as redis from 'redis';  // Dòng này đc thêm vào để fix lỗi TypeError: Cannot read properties of undefined (reading 'createClient')

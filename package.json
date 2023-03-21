@@ -31,6 +31,7 @@
     "util": "^0.12.5",
     "uuid": "^9.0.0"
   },
+  "type": "module",
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon --exec babel-node src/server.js"

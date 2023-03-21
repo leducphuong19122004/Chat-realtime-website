@@ -4,7 +4,7 @@ import authController from '../controller/authController';
 import multer from "multer";
 import path from 'path';
 import passport from 'passport';
-const { loggedIn } = require("../services/authMiddleware");
+import { loggedIn } from '../services/authMiddleware';
 import jwt from 'jsonwebtoken';
 
 

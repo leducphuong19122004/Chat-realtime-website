@@ -10,9 +10,9 @@ import cookies from 'cookie-parser';
 import passport from 'passport';
 import connection from './configs/connectDB';
 import { type } from 'os';
-var FacebookStrategy = require('passport-facebook').Strategy;
-var GoogleStrategy = require('passport-google-oauth2').Strategy;
-const cloudinary = require('cloudinary').v2;
+import { Strategy as FacebookStrategy } from 'passport-facebook';
+import { Strategy as GoogleStrategy } from 'passport-google-oauth2';
+import { v2 as cloudinary } from 'cloudinary';
 
 
 // connect redis

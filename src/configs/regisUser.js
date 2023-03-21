@@ -1,5 +1,5 @@
 import connection from './connectDB';
-const { NotFoundError } = require("../services/utility");
+import { NotFoundError } from '../services/utility';
 
 // constructor
 const User = function (user) {

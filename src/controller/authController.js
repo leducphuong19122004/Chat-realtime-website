@@ -2,11 +2,11 @@ import connection from "../configs/connectDB";
 const User = require("../configs/regisUser");
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-require('dotenv').config();
-const { NotFoundError } = require("../services/utility");
+import dotenv from 'dotenv';
+dotenv.config();
+import { NotFoundError } from "../services/utility";
 import { v4 as uuidv4 } from 'uuid';
 import * as redis from 'redis'; // Dòng này đc thêm vào để fix lỗi TypeError: Cannot read properties of undefined (reading 'createClient')
-const { loggedIn } = require("../services/authMiddleware");
 import checkingUser from '../configs/connectDB_passportjs';
 
 const client = redis.createClient({

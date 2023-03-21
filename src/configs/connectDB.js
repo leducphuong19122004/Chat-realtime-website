@@ -4,10 +4,10 @@ import mysql from 'mysql2';
 // create the connection to database
 const connection = mysql.createConnection({
     host: process.env.MYSQLHOST || 'localhost',
-    user: MYSQLUSER || 'root',
-    password: '19122004',
-    database: MYSQLPASSWORD || 'databasenodejs',
-    port: MYSQLPORT || '3036'
+    user: process.env.MYSQLUSER || 'root',
+    password: process.env.MYSQLPASSWORD || '19122004',
+    database: process.env.MYSQLDATABASE || 'databasenodejs',
+    port: process.env.MYSQLPORT || '3036'
 }).promise(); // mysql2 cung cấp .promise() function giúp đảm bảo code đc chạy theo đúng trình tự 
 
 

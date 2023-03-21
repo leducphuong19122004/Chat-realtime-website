@@ -32,7 +32,10 @@
     "uuid": "^9.0.0"
   },
   "scripts": {
-    "start": "node --exec babel-node src/server.js",
+    "start": "node src/server.js",
     "dev": "nodemon --exec babel-node src/server.js"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.21.3"
   }
 }

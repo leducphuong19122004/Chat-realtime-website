@@ -80,9 +80,10 @@
 </style>
 <script src="https://unpkg.com/peerjs@1.3.2/dist/peerjs.min.js"></script>
 <script>
+    const userID = '<%= userID %>';
+
     const myPeer = new Peer(userID);
 
-    const userID = '<%= userID %>';
     let friendID = '<%= friendID %>';
     const myVideo = document.querySelector('.video-host');
     const peerVideo = document.querySelector('.video-client');

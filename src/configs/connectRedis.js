@@ -1,5 +1,11 @@
 import redis from 'redis';
+import dotenv from 'dotenv';
+dotenv.config();
+
 const redisclient = redis.createClient({
+    host: process.env.REDISHOST,
+    port: process.env.REDISPORT,
+    password: process.env.REDISPASSWORD,
     legacyMode: true
 });
 

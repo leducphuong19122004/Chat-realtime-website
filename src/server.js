@@ -29,7 +29,7 @@ client
     });
 
 import dotenv from 'dotenv';
-dotenv.config(); // static file
+dotenv.config();
 
 var app = express();
 

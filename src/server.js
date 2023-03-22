@@ -110,6 +110,7 @@ app.use((req, res) => { // Bind application-level middleware to an instance of t
 // setting socket.io
 import http from 'http';
 var server = http.createServer(app);
+const hostname = '0.0.0.0';
 
 import { Server } from 'socket.io';
 
@@ -164,4 +165,4 @@ io.on('connection', (socket) => {
 
 })
 
-server.listen(process.env.PORT || 3000, () => console.log(`Server has started.`));
+server.listen(process.env.PORT || 3000, hostname, () => console.log(`Server has started.`));

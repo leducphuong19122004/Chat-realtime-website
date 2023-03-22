@@ -45,7 +45,7 @@ app.use(morgan('combined', { stream: accessLogStream }))
 app.use(express.json()); // for json
 app.use(express.urlencoded({ extended: false }));
 app.use(cors({
-    origin: 'http://localhost:3000', //Chan tat ca cac domain khac ngoai domain nay
+    origin: 'https://chat-app-realtime.up.railway.app/', //Chan tat ca cac domain khac ngoai domain nay
     credentials: true //Để bật cookie HTTP qua CORS
 }))
 app.use(cookies());
@@ -55,7 +55,7 @@ app.use(passport.initialize());
 passport.use(new FacebookStrategy({
     clientID: process.env.FACEBOOK_ID,
     clientSecret: process.env.FACEBOOK_SECRET,
-    callbackURL: "http://localhost:3000/auth/facebook/callback",
+    callbackURL: "https://chat-app-realtime.up.railway.app//auth/facebook/callback",
     enableProof: true, // We also set enableProof: true to include a proof of authentication in the access token.
     profileFields: ['id', 'email', 'gender', 'link', 'locale', 'displayName', 'timezone', 'updated_time', 'verified']
 }, function (accessToken, refeshToken, profile, done) { // this function must have 4 parameters, refresh token is optional paramesters
@@ -73,7 +73,7 @@ passport.use(new FacebookStrategy({
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_ID,
     clientSecret: process.env.GOOGLE_SECRET,
-    callbackURL: "http://localhost:3000/auth/google/callback",
+    callbackURL: "https://chat-app-realtime.up.railway.app//auth/google/callback",
     enableProof: true, // We also set enableProof: true to include a proof of authentication in the access token.
     profileFields: ['id', 'email', 'gender', 'link', 'locale', 'displayName', 'timezone', 'updated_time', 'verified']
 }, function (accessToken, refeshToken, profile, done) { // this function must have 4 parameters, refresh token is optional paramesters

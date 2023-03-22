@@ -1,6 +1,5 @@
-import connection from '../configs/connectDB';
+import connection from '../configs/connectDB.js';
 import multer from 'multer';
-import { readFile } from '@babel/core/lib/gensync-utils/fs';
 import jwt from 'jsonwebtoken';
 import * as redis from 'redis';  // Dòng này đc thêm vào để fix lỗi TypeError: Cannot read properties of undefined (reading 'createClient')
 import util from 'util';
@@ -20,21 +19,21 @@ client
     });
 
 
-let getStartPage = async (req, res) => {
+export let getStartPage = async (req, res) => {
     return res.render('startPage.ejs');
 }
 
-let redirectToHome = (req, res) => {
+export let redirectToHome = (req, res) => {
     return res.redirect('/home');
 }
 
-let getHomePage = (req, res) => {
+export let getHomePage = (req, res) => {
     const Rtoken = req.cookies.refresh_token;
     const RPayload = jwt.verify(Rtoken, process.env.TOKEN_SECRET);
     return res.render('home.ejs', { userID: RPayload.id });
 }
 
-let getProfileUser = async (req, res) => {
+export let getProfileUser = async (req, res) => {
     let filename;
 
     const Rtoken = req.cookies.refresh_token;
@@ -57,7 +56,7 @@ let getProfileUser = async (req, res) => {
 
 }
 
-let changeAvatar = async (req, res) => {
+export let changeAvatar = async (req, res) => {
     try {
         const file = req.file;
         const Rtoken = req.cookies.refresh_token;
@@ -79,7 +78,7 @@ let changeAvatar = async (req, res) => {
 
 }
 
-let getChatPage = async (req, res) => {
+export let getChatPage = async (req, res) => {
     const Rtoken = req.cookies.refresh_token;
     const RPayload = jwt.verify(Rtoken, process.env.TOKEN_SECRET);
 
@@ -91,7 +90,7 @@ let getChatPage = async (req, res) => {
     return res.render('chatPage.ejs', { userID: RPayload.id, friend: friend });
 }
 
-let showChatMessage = (req, res) => {
+export let showChatMessage = (req, res) => {
     const roomID = req.params.roomID;
 
     connection.execute('SELECT * FROM `message` WHERE `room_id` = ?', [roomID]).then(result => {
@@ -100,7 +99,7 @@ let showChatMessage = (req, res) => {
     });
 }
 
-let sendImageMessage = async (req, res) => {
+export let sendImageMessage = async (req, res) => {
     try {
         const files = req.files.file; // files is array of objects 
         const Rtoken = req.cookies.refresh_token;
@@ -124,7 +123,7 @@ let sendImageMessage = async (req, res) => {
     }
 }
 
-let getVideoCall = (req, res) => {
+export let getVideoCall = (req, res) => {
     let friendid = req.params.friendid;
     const Rtoken = req.cookies.refresh_token;
     const RPayload = jwt.verify(Rtoken, process.env.TOKEN_SECRET);
@@ -132,7 +131,7 @@ let getVideoCall = (req, res) => {
 }
 
 
-let editProfile = async (req, res) => {
+export let editProfile = async (req, res) => {
     // By default, the llen command takes a callback function that is called with two arguments: an error object (or null if no error occurred) and the length of the list
     // However, since we want to use the llen command with promises, we need to convert it to
     // a function that returns a promise. This is where util.promisify comes in. 
@@ -164,7 +163,7 @@ let editProfile = async (req, res) => {
     }
 }
 
-let saveProfile = async (req, res) => {
+export let saveProfile = async (req, res) => {
     const Rtoken = req.cookies.refresh_token;
     const RPayload = jwt.verify(Rtoken, process.env.TOKEN_SECRET);
 
@@ -177,7 +176,7 @@ let saveProfile = async (req, res) => {
     return res.redirect('/profile-user');
 }
 
-let getListFriend = async (req, res) => {
+export let getListFriend = async (req, res) => {
     const Rtoken = req.cookies.refresh_token;
     const RPayload = jwt.verify(Rtoken, process.env.TOKEN_SECRET);
 
@@ -188,7 +187,7 @@ let getListFriend = async (req, res) => {
     return res.render('listFriend.ejs', { friend: friend });
 }
 
-let searchListFriend = async (req, res) => {
+export let searchListFriend = async (req, res) => {
     const Rtoken = req.cookies.refresh_token;
     const RPayload = jwt.verify(Rtoken, process.env.TOKEN_SECRET);
 
@@ -219,36 +218,14 @@ let searchListFriend = async (req, res) => {
 
 
 // login form
-let getLoginForm = (req, res) => {
+export let getLoginForm = (req, res) => {
     return res.render('login_form.ejs')
 }
 
-let getSignupForm = (req, res) => {
+export let getSignupForm = (req, res) => {
     return res.render('signupForm.ejs')
 }
 
-let logout = (req, res) => {
+export let logout = (req, res) => {
     return res.redirect('/');
-}
-module.exports = {
-    getStartPage,
-    redirectToHome,
-    getHomePage,
-    changeAvatar,
-    editProfile,
-    saveProfile,
-
-    // changes
-    getProfileUser,
-    getChatPage,
-    getListFriend,
-    searchListFriend,
-    showChatMessage,
-    sendImageMessage,
-    getVideoCall,
-
-    //upload file
-    getLoginForm,
-    getSignupForm,
-    logout
 }

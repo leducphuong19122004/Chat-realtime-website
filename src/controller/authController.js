@@ -1,13 +1,12 @@
-import connection from "../configs/connectDB";
-const User = require("../configs/regisUser");
+import User from '../configs/regisUser.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 dotenv.config();
-import { NotFoundError } from "../services/utility";
+import { NotFoundError } from "../services/utility.js";
 import { v4 as uuidv4 } from 'uuid';
 import * as redis from 'redis'; // Dòng này đc thêm vào để fix lỗi TypeError: Cannot read properties of undefined (reading 'createClient')
-import checkingUser from '../configs/connectDB_passportjs';
+import checkingUser from '../configs/connectDB_passportjs.js';
 
 const client = redis.createClient({
     legacyMode: true
@@ -20,7 +19,7 @@ client
     });
 
 // Register a new User
-let register = async (req, res) => {
+export let register = async (req, res) => {
     // generate random id for user
     const userID = uuidv4();
     //Hash password
@@ -50,7 +49,7 @@ let register = async (req, res) => {
     }
 };
 
-let login = async (req, res) => {
+export let login = async (req, res) => {
     try {
         // Check user exist
         const user = await User.login(req.body);
@@ -94,7 +93,7 @@ let login = async (req, res) => {
 };
 
 
-let logout = async (req, res) => {
+export let logout = async (req, res) => {
     try {
         const Rtoken = req.cookies.refresh_token;
         const RPayload = jwt.verify(Rtoken, process.env.TOKEN_SECRET);
@@ -111,7 +110,7 @@ let logout = async (req, res) => {
 }
 
 
-let init_RToken_AToken_for_FB_GG = async (req, res, next) => {
+export let init_RToken_AToken_for_FB_GG = async (req, res, next) => {
     var result = await checkingUser(req.user);
 
     // Create and assign token
@@ -132,7 +131,7 @@ let init_RToken_AToken_for_FB_GG = async (req, res, next) => {
     res.redirect('/home');
 }
 
-let checkingCookie = (req, res, next) => {
+export let checkingCookie = (req, res, next) => {
     const refreshToken = req.cookies.refresh_token;
     const accessToken = req.cookies.access_token;
     // Check if tokens exist
@@ -143,10 +142,4 @@ let checkingCookie = (req, res, next) => {
     }
 }
 
-module.exports = {
-    login,
-    register,
-    logout,
-    init_RToken_AToken_for_FB_GG,
-    checkingCookie
-}
+

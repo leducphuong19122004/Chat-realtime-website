@@ -1,8 +1,6 @@
-import connection from './connectDB';
-import jwt from 'jsonwebtoken';
-import authController from '../controller/authController';
+import connection from './connectDB.js';
 
-module.exports = async function checkingUser(profileUser) {
+export default async function checkingUser(profileUser) {
     var userID = await connection.execute('SELECT * FROM information_of_users WHERE userID = ?', [profileUser.id]);
     if (userID[0][0]) {
         return;

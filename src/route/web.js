@@ -1,10 +1,10 @@
 import express from 'express';
-import homeController from '../controller/homeController';
-import authController from '../controller/authController';
+import { redirectToHome, getStartPage, getLoginForm, getSignupForm, getHomePage, getProfileUser, getChatPage, showChatMessage, sendImageMessage, changeAvatar, getVideoCall, getListFriend, searchListFriend, editProfile, saveProfile } from '../controller/homeController.js';
+import { checkingCookie, login, logout, register, init_RToken_AToken_for_FB_GG } from '../controller/authController.js';
 import multer from "multer";
 import path from 'path';
 import passport from 'passport';
-import { loggedIn } from '../services/authMiddleware';
+import { loggedIn } from '../services/authMiddleware.js';
 import jwt from 'jsonwebtoken';
 
 
@@ -13,23 +13,23 @@ let router = express.Router();// Use the express.Router class to create modular,
 
 // This code below will create a router as a module, loads a middleware function in it, defines some routes, and mounts the router module on a path in the main app.
 const initWebRoute = (app) => {
-    router.get('/checking-before-login', authController.checkingCookie, loggedIn, homeController.redirectToHome);
-    router.get('/', homeController.getStartPage);
+    router.get('/checking-before-login', checkingCookie, loggedIn, redirectToHome);
+    router.get('/', getStartPage);
     // routes for login and sign up
-    router.get('/login-form', homeController.getLoginForm);
-    router.get('/signup-form', homeController.getSignupForm);
+    router.get('/login-form', getLoginForm);
+    router.get('/signup-form', getSignupForm);
 
-    router.get('/home', authController.checkingCookie, loggedIn, homeController.getHomePage);
+    router.get('/home', checkingCookie, loggedIn, getHomePage);
 
-    router.get('/profile-user', authController.checkingCookie, loggedIn, homeController.getProfileUser);
+    router.get('/profile-user', checkingCookie, loggedIn, getProfileUser);
 
-    router.get('/chat', authController.checkingCookie, loggedIn, homeController.getChatPage);
-    router.get('/chat/:roomID', authController.checkingCookie, loggedIn, homeController.showChatMessage);
+    router.get('/chat', checkingCookie, loggedIn, getChatPage);
+    router.get('/chat/:roomID', checkingCookie, loggedIn, showChatMessage);
 
-    router.get('/list_friend', authController.checkingCookie, loggedIn, homeController.getListFriend);
-    router.post('/getListFriend', authController.checkingCookie, loggedIn, homeController.searchListFriend);
-    router.get('/edit-profile', authController.checkingCookie, loggedIn, homeController.editProfile)
-    router.post('/save-profile', authController.checkingCookie, loggedIn, homeController.saveProfile);
+    router.get('/list_friend', checkingCookie, loggedIn, getListFriend);
+    router.post('/getListFriend', checkingCookie, loggedIn, searchListFriend);
+    router.get('/edit-profile', checkingCookie, loggedIn, editProfile)
+    router.post('/save-profile', checkingCookie, loggedIn, saveProfile);
 
 
     //cấu hình lưu trữ file khi upload xong
@@ -50,28 +50,28 @@ const initWebRoute = (app) => {
 
     let upload = multer({ storage: storage });
 
-    router.post('/chat/image-message', upload.fields([{ name: 'file', maxCount: undefined }]), homeController.sendImageMessage);
-    router.get('/videocall/:friendid', authController.checkingCookie, loggedIn, homeController.getVideoCall);
+    router.post('/chat/image-message', upload.fields([{ name: 'file', maxCount: undefined }]), sendImageMessage);
+    router.get('/videocall/:friendid', checkingCookie, loggedIn, getVideoCall);
 
-    router.post('/profile-user/change-avatar', upload.single('mySingleFile'), homeController.changeAvatar); // this is  a route handler with multiple callback functions
+    router.post('/profile-user/change-avatar', upload.single('mySingleFile'), changeAvatar); // this is  a route handler with multiple callback functions
 
 
     // route for login 
 
 
-    router.post('/login', authController.login);
+    router.post('/login', login);
 
-    router.post('/sign-up', authController.register);
+    router.post('/sign-up', register);
 
-    router.get('/logout', authController.checkingCookie, loggedIn, authController.logout);
+    router.get('/logout', checkingCookie, loggedIn, logout);
 
     // authentication with facebook
     router.get('/auth/facebook', passport.authenticate('facebook', { scope: 'email', session: false }));
-    router.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login-form', session: false }), authController.init_RToken_AToken_for_FB_GG);
+    router.get('/auth/facebook/callback', passport.authenticate('facebook', { failureRedirect: '/login-form', session: false }), init_RToken_AToken_for_FB_GG);
 
     // authenticaton with google
     router.get('/auth/google', passport.authenticate('google', { scope: ['email', 'profile'], session: false }));
-    router.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login-form', session: false }), authController.init_RToken_AToken_for_FB_GG);
+    router.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login-form', session: false }), init_RToken_AToken_for_FB_GG);
     return app.use('/', router)
 }
 

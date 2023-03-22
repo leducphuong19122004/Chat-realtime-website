@@ -1,5 +1,5 @@
-import connection from './connectDB';
-import { NotFoundError } from '../services/utility';
+import connection from './connectDB.js';
+import { NotFoundError } from '../services/utility.js';
 
 // constructor
 const User = function (user) {
@@ -121,4 +121,4 @@ User.getType = async (id) => {
     }
 };
 
-module.exports = User;
+export default User;

@@ -1,15 +1,14 @@
 import express from 'express';
-import configViewEngine from './configs/viewEngine';
-import initWebRoute from './route/web';
-import initAPIRoute from './route/apiRoute';
+import configViewEngine from './configs/viewEngine.js';
+import initWebRoute from './route/web.js';
+import initAPIRoute from './route/apiRoute.js';
 import morgan from 'morgan';
 import fs from 'fs';
 import path from 'path';
 import cors from 'cors';
 import cookies from 'cookie-parser';
 import passport from 'passport';
-import connection from './configs/connectDB';
-import { type } from 'os';
+import connection from './configs/connectDB.js';
 import { Strategy as FacebookStrategy } from 'passport-facebook';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth2';
 import { v2 as cloudinary } from 'cloudinary';
@@ -19,7 +18,7 @@ import { v2 as cloudinary } from 'cloudinary';
 // import connectRedis from './configs/connectRedis';
 // connectRedis.connectRedis();
 
-const redis = require('redis');
+import redis from 'redis';
 const client = redis.createClient();
 
 
@@ -29,13 +28,14 @@ client
         console.log('err happened' + err);
     });
 
-require('dotenv').config(); // static file
+import dotenv from 'dotenv';
+dotenv.config(); // static file
 
 var app = express();
 
 
 // create a write stream (in append mode)
-var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
+var accessLogStream = fs.createWriteStream('access.log', { flags: 'a' })
 // The createWriteStream(path, options) method is an inbuilt application programming interface of fs module which allows to quickly make a writable stream 
 // for the purpose of writing data to a file. This method may be a smarter option compared to methods like fs.writeFile when it comes to very large amounts of data.
 // setup the logger
@@ -108,8 +108,12 @@ app.use((req, res) => { // Bind application-level middleware to an instance of t
 })
 
 // setting socket.io
-var server = require('http').createServer(app);
-var io = require('socket.io')(server);
+import http from 'http';
+var server = http.createServer(app);
+
+import { Server } from 'socket.io';
+
+const io = new Server(server);
 
 io.on('connection', (socket) => {
 

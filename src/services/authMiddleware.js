@@ -1,7 +1,6 @@
-const jwt = require("jsonwebtoken");
+import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config;
-import { resolve } from 'path';
 import util from 'util';
 import * as redis from 'redis';  // Dòng này đc thêm vào để fix lỗi TypeError: Cannot read properties of undefined (reading 'createClient')
 const client = redis.createClient({
@@ -15,7 +14,7 @@ client
     });
 
 
-exports.loggedIn = async function (req, res, next) {
+export let loggedIn = async function (req, res, next) {
     try {
         // get access token and refresh token
         const Rtoken = req.cookies.refresh_token;

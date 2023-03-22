@@ -21,4 +21,4 @@ function connectRedis() {
 
 
 
-module.exports = { connectRedis }
+export default connectRedis;

@@ -12,6 +12,8 @@ import connection from './configs/connectDB.js';
 import { Strategy as FacebookStrategy } from 'passport-facebook';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth2';
 import { v2 as cloudinary } from 'cloudinary';
+import dotenv from 'dotenv';
+dotenv.config()
 
 
 // connect redis
@@ -19,7 +21,13 @@ import { v2 as cloudinary } from 'cloudinary';
 // connectRedis.connectRedis();
 
 import redis from 'redis';
-const client = redis.createClient();
+const client = redis.createClient({
+    host: process.env.REDISHOST,
+    port: process.env.REDISPORT,
+    password: process.env.REDISPASSWORD,
+    url: process.env.REDIS_URL,
+    legacyMode: true
+});
 
 
 client
@@ -28,8 +36,7 @@ client
         console.log('err happened' + err);
     });
 
-import dotenv from 'dotenv';
-dotenv.config();
+;
 
 var app = express();
 

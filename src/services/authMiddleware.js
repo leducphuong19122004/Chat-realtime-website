@@ -4,6 +4,10 @@ dotenv.config;
 import util from 'util';
 import * as redis from 'redis';  // Dòng này đc thêm vào để fix lỗi TypeError: Cannot read properties of undefined (reading 'createClient')
 const client = redis.createClient({
+    host: process.env.REDISHOST,
+    port: process.env.REDISPORT,
+    password: process.env.REDISPASSWORD,
+    url: process.env.REDIS_URL,
     legacyMode: true
 }); //Thêm lagacyMode để tránh bug là ClientClosedError: The client is closed
 

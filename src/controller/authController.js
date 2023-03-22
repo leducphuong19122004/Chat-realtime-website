@@ -9,6 +9,10 @@ import * as redis from 'redis'; // Dòng này đc thêm vào để fix lỗi Typ
 import checkingUser from '../configs/connectDB_passportjs.js';
 
 const client = redis.createClient({
+    host: process.env.REDISHOST,
+    port: process.env.REDISPORT,
+    password: process.env.REDISPASSWORD,
+    url: process.env.REDIS_URL,
     legacyMode: true
 }); //Thêm lagacyMode để tránh bug là ClientClosedError: The client is closed
 

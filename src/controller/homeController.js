@@ -9,6 +9,10 @@ import { rejects } from 'assert';
 import { type } from 'os';
 import { v2 as cloudinary } from 'cloudinary';
 const client = redis.createClient({
+    host: process.env.REDISHOST,
+    port: process.env.REDISPORT,
+    password: process.env.REDISPASSWORD,
+    url: process.env.REDIS_URL,
     legacyMode: true
 }); //Thêm lagacyMode để tránh bug là ClientClosedError: The client is closed
 

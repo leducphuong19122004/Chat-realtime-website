@@ -15,13 +15,16 @@
             <div class="col-1">
                 <video class="video-client" autoplay playsinline style="pointer-events: none;"> </video>
                 <div class="controls">
-                    <img src="https://img.icons8.com/ios-filled/256/minimize-window.png">
-                    <img src="https://img.icons8.com/sf-black-filled/256/video-call.png">
+                    <a class="minimize-window-btn"><img
+                            src="https://img.icons8.com/ios-filled/256/minimize-window.png"></a>
+                    <a class="video-btn"><img src="https://img.icons8.com/sf-black-filled/256/video-call.png"
+                            class="img_video"></a>
                     <a class="shutdown-btn"><img
                             src="https://img.icons8.com/external-others-inmotus-design/256/external-Disconnect-phone-operations-and-functions-others-inmotus-design.png"></a>
 
-                    <img src="https://img.icons8.com/ios-glyphs/256/microphone.png">
-                    <img src="https://img.icons8.com/material-sharp/256/speaker.png">
+                    <a class="microphone-btn"><img src="https://img.icons8.com/ios-glyphs/256/microphone.png"
+                            class="img_microphone"></a>
+                    <a class="speaker-btn"><img src="https://img.icons8.com/material-sharp/256/speaker.png"></a>
                 </div>
 
             </div>
@@ -83,50 +86,92 @@
     const userID = '<%= userID %>';
     const roomID = '<%= roomID %>';
     let friendID = '<%= friendID %>';
+
     const myVideo = document.querySelector('.video-host');
     const peerVideo = document.querySelector('.video-client');
+    const speaker_btn = document.querySelector('.speaker-btn');
+    const microphone_btn = document.querySelector('.microphone-btn');
+    const video_btn = document.querySelector('.video-btn');
+    const shutdown_btn = document.querySelector('.shutdown-btn');
+
+    const img_video = document.querySelector('.img_video');
+    const img_microphone = document.querySelector('.img_microphone');
+
+
+    speaker_btn.addEventListener('click', () => {
+        audio = false;
+    });
+
+
 
     const myPeer = new Peer(userID);
 
-    navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true
-    }).then(stream => {
+    const mediaStream = await navigator.mediaDevices.getUserMedia({ // mediaStream is mediaStream Object 
+        video: {
+            width: { min: 1024, ideal: 1280, max: 1920 },
+            height: { min: 576, ideal: 720, max: 1080 },
+        },
+        audio: true,
+    })
 
-        addVideoStream(myVideo, stream); // display my video on screen
+    addVideoStream(myVideo, mediaStream); // display my video on screen
 
-        const call = myPeer.call(friendID, stream); // call to friend who have friend id is friendID
-        // call is mediaConnection
-        call.on('stream', userVideoStream => {
-            addVideoStream(peerVideo, userVideoStream)
+    const call_mine = myPeer.call(friendID, mediaStream); // call to friend who have friend id is friendID
+    // call is mediaConnection
+    call_mine.on('stream', userVideoStream => {
+        addVideoStream(peerVideo, userVideoStream)
+    })
+
+    // myPeer.on will emitted when a remote peer attempts to call you
+    myPeer.on('call', call => { // call is mediaConnection object
+        call.answer(mediaStream);
+        // call.on will emitted when a remote peer adds stream
+        call.on('stream', stream => {
+            addVideoStream(peerVideo, stream); // display remote peer video on my screen
         })
-
-        // myPeer.on will emitted when a remote peer attempts to call you
-        myPeer.on('call', call => { // call is mediaConnection object
-            call.answer(stream);
-            // call.on will emitted when a remote peer adds stream
-            call.on('stream', stream => {
-                addVideoStream(peerVideo, stream); // display remote peer video on my screen
-            })
-        })
-
-        const shutdown_btn = document.querySelector('.shutdown-btn');
-
         shutdown_btn.addEventListener('click', () => {
             call.close();
         })
-
         call.on('close', () => {
             window.location.href = '/chat';
         })
-
-        call.on('error', () => {
-            console.log("met error !");
-        })
     })
-        .catch(error => {
-            console.error("Failed to get user media: ", error);
-        });
+
+
+    shutdown_btn.addEventListener('click', () => {
+        call_mine.close();
+    })
+
+    call_mine.on('close', () => {
+        window.location.href = '/chat';
+    })
+
+    call_mine.on('error', () => {
+        console.log("met error !");
+    })
+
+    // this function will turn off or on microphone when use click;
+    microphone_btn.addEventListener('click', () => {
+        const audioTrack = mediaStream.getAudioTracks()[0];
+        // change icon microphone
+        if (audioTrack.enabled) {
+            img_microphone.src = "https://img.icons8.com/ios-glyphs/256/block-microphone.png";
+        } else {
+            img_microphone.src = "https://img.icons8.com/ios-glyphs/256/microphone.png";
+        }
+        audioTrack.enabled = !audioTrack.enabled;
+    });
+
+    video_btn.addEventListener('click', () => {
+        const videoTrack = mediaStream.getVideoTracks()[0];
+        // change video icon
+        if (videoTrack.enabled) {
+            img_video.src = "https://img.icons8.com/ios-filled/256/no-video.png";
+        } else {
+            img_video.src = "https://img.icons8.com/sf-black-filled/256/video-call.png";
+        }
+        videoTrack.enabled = !videoTrack.enabled;
+    })
 
     function addVideoStream(video, stream) {
         video.srcObject = stream;

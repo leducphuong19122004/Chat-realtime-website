@@ -136,21 +136,17 @@
             call.on('stream', stream => {
                 addVideoStream(peerVideo, stream); // display remote peer video on my screen
             })
-            call_mine.on('close', () => {
-                shutdown_btn.addEventListener('click', () => {
-                    call.close();
-                })
-                call.on('close', () => {
-                    window.location.href = '/chat';
-                })
+            call.on('close', () => {
+                call_mine.close();
+                window.location.href = '/chat';
             })
-
         })
+
 
         shutdown_btn.addEventListener('click', () => {
             call_mine.close();
             window.location.href = '/chat';
-        })
+        });
 
         call_mine.on('error', () => {
             console.log("met error !");
@@ -189,7 +185,8 @@
             }
         })
 
-    })
+    });
+
 
     function addVideoStream(video, stream) {
         video.srcObject = stream;

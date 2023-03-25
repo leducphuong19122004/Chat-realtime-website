@@ -24,12 +24,13 @@
 
                     <a class="microphone-btn"><img src="https://img.icons8.com/ios-glyphs/256/microphone.png"
                             class="img_microphone"></a>
-                    <a class="speaker-btn"><img src="https://img.icons8.com/material-sharp/256/speaker.png"></a>
+                    <a class="speaker-btn"><img src="https://img.icons8.com/material-sharp/256/speaker.png"
+                            class="img_speaker"></a>
                 </div>
 
             </div>
             <div class="col-2">
-                <video class="video-host" autoplay muted playsinline style="pointer-events: none;"></video>
+                <video class="video-host" autoplay playsinline style="pointer-events: none;" muted></video>
             </div>
         </div>
     </div>
@@ -96,6 +97,7 @@
 
     const img_video = document.querySelector('.img_video');
     const img_microphone = document.querySelector('.img_microphone');
+    const img_speaker = document.querySelector('.img_speaker');
 
 
     speaker_btn.addEventListener('click', () => {
@@ -103,21 +105,26 @@
     });
 
 
-
     const myPeer = new Peer(userID);
 
     navigator.mediaDevices.getUserMedia({ // mediaStream is mediaStream Object 
         video: {
-            width: { min: 1024, ideal: 1280, max: 1920 },
-            height: { min: 576, ideal: 720, max: 1080 },
+            width: 1887,
+            height: 895,
         },
         audio: true,
     }).then(mediaStream => {
+
+        // let newMediaStream = new MediaStream(mediaStream.getTracks());
+        // let audioTrack_mine = newStream.getAudioTracks()[0];
+        // newMediaStream.removeTrack(audioTrack_mine);
 
         addVideoStream(myVideo, mediaStream); // display my video on screen
 
         const call_mine = myPeer.call(friendID, mediaStream); // call to friend who have friend id is friendID
         // call is mediaConnection
+
+        // this function will emitted when a remote peer adds a stream.
         call_mine.on('stream', userVideoStream => {
             addVideoStream(peerVideo, userVideoStream)
         })
@@ -129,20 +136,19 @@
             call.on('stream', stream => {
                 addVideoStream(peerVideo, stream); // display remote peer video on my screen
             })
-            shutdown_btn.addEventListener('click', () => {
-                call.close();
+            call_mine.on('close', () => {
+                shutdown_btn.addEventListener('click', () => {
+                    call.close();
+                })
+                call.on('close', () => {
+                    window.location.href = '/chat';
+                })
             })
-            call.on('close', () => {
-                window.location.href = '/chat';
-            })
-        })
 
+        })
 
         shutdown_btn.addEventListener('click', () => {
             call_mine.close();
-        })
-
-        call_mine.on('close', () => {
             window.location.href = '/chat';
         })
 
@@ -171,6 +177,16 @@
                 img_video.src = "https://img.icons8.com/sf-black-filled/256/video-call.png";
             }
             videoTrack.enabled = !videoTrack.enabled;
+        })
+
+        speaker_btn.addEventListener('click', () => {
+            if (peerVideo.muted) {
+                peerVideo.muted = false;
+                img_speaker.src = "https://img.icons8.com/ios-filled/256/no-audio.png";
+            } else {
+                img_speaker.src = "https://img.icons8.com/material-sharp/256/speaker.png";
+                peerVideo.muted = true;
+            }
         })
 
     })

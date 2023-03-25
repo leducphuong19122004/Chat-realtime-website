@@ -51,7 +51,7 @@ const initWebRoute = (app) => {
     let upload = multer({ storage: storage });
 
     router.post('/chat/image-message', upload.fields([{ name: 'file', maxCount: undefined }]), sendImageMessage);
-    router.get('/videocall/:friendid', checkingCookie, loggedIn, getVideoCall);
+    router.get('/videocall/:friendid/:roomID', checkingCookie, loggedIn, getVideoCall);
 
     router.post('/profile-user/change-avatar', upload.single('mySingleFile'), changeAvatar); // this is  a route handler with multiple callback functions
 

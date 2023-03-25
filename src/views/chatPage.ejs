@@ -707,7 +707,7 @@
 
             // this functions helps redirect to route /videocall/:friendid when click to camera
             function gotoVideoCallPage(friendid) {
-                var url = "/videocall/" + friendid;
+                var url = "/videocall/" + friendid + "/" + roomID;
                 window.location.href = url;
             }
 

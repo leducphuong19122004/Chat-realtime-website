@@ -129,9 +129,11 @@ export let sendImageMessage = async (req, res) => {
 
 export let getVideoCall = (req, res) => {
     let friendid = req.params.friendid;
+    let roomID = req.params.roomID;
+
     const Rtoken = req.cookies.refresh_token;
     const RPayload = jwt.verify(Rtoken, process.env.TOKEN_SECRET);
-    return res.render('callvideo.ejs', { userID: RPayload.id, friendID: friendid });
+    return res.render('callvideo.ejs', { userID: RPayload.id, friendID: friendid, roomID: roomID });
 }
 
 

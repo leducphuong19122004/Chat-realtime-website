@@ -17,8 +17,8 @@
                 <div class="controls">
                     <img src="https://img.icons8.com/ios-filled/256/minimize-window.png">
                     <img src="https://img.icons8.com/sf-black-filled/256/video-call.png">
-                    <img src="https://img.icons8.com/external-others-inmotus-design/256/external-Disconnect-phone-operations-and-functions-others-inmotus-design.png"
-                        class="call-icon">
+                    <a class="shutdown-btn"><img
+                            src="https://img.icons8.com/external-others-inmotus-design/256/external-Disconnect-phone-operations-and-functions-others-inmotus-design.png"></a>
 
                     <img src="https://img.icons8.com/ios-glyphs/256/microphone.png">
                     <img src="https://img.icons8.com/material-sharp/256/speaker.png">
@@ -81,14 +81,12 @@
 <script src="https://unpkg.com/peerjs@1.3.2/dist/peerjs.min.js"></script>
 <script>
     const userID = '<%= userID %>';
-
-    const myPeer = new Peer(userID);
-
+    const roomID = '<%= roomID %>';
     let friendID = '<%= friendID %>';
     const myVideo = document.querySelector('.video-host');
     const peerVideo = document.querySelector('.video-client');
 
-
+    const myPeer = new Peer(userID);
 
     navigator.mediaDevices.getUserMedia({
         video: true,
@@ -98,30 +96,43 @@
         addVideoStream(myVideo, stream); // display my video on screen
 
         const call = myPeer.call(friendID, stream); // call to friend who have friend id is friendID
+        // call is mediaConnection
         call.on('stream', userVideoStream => {
             addVideoStream(peerVideo, userVideoStream)
         })
 
         // myPeer.on will emitted when a remote peer attempts to call you
         myPeer.on('call', call => { // call is mediaConnection object
-            console.log("hellllo");
             call.answer(stream);
             // call.on will emitted when a remote peer adds stream
             call.on('stream', stream => {
                 addVideoStream(peerVideo, stream); // display remote peer video on my screen
             })
         })
+
+        const shutdown_btn = document.querySelector('.shutdown-btn');
+
+        shutdown_btn.addEventListener('click', () => {
+            call.close();
+        })
+
+        call.on('close', () => {
+            window.location.href = `/chat/${roomID}`;
+        })
+
+        call.on('error', () => {
+            console.log("met error !");
+        })
     })
         .catch(error => {
             console.error("Failed to get user media: ", error);
         });
 
-
-
-
     function addVideoStream(video, stream) {
         video.srcObject = stream;
     }
+
+
 
 </script>
 <!-- <script src="/logicFile/callvideo.js"></script> -->

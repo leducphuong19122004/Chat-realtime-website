@@ -106,71 +106,73 @@
 
     const myPeer = new Peer(userID);
 
-    const mediaStream = await navigator.mediaDevices.getUserMedia({ // mediaStream is mediaStream Object 
+    navigator.mediaDevices.getUserMedia({ // mediaStream is mediaStream Object 
         video: {
             width: { min: 1024, ideal: 1280, max: 1920 },
             height: { min: 576, ideal: 720, max: 1080 },
         },
         audio: true,
-    })
+    }).then(mediaStream => {
 
-    addVideoStream(myVideo, mediaStream); // display my video on screen
+        addVideoStream(myVideo, mediaStream); // display my video on screen
 
-    const call_mine = myPeer.call(friendID, mediaStream); // call to friend who have friend id is friendID
-    // call is mediaConnection
-    call_mine.on('stream', userVideoStream => {
-        addVideoStream(peerVideo, userVideoStream)
-    })
-
-    // myPeer.on will emitted when a remote peer attempts to call you
-    myPeer.on('call', call => { // call is mediaConnection object
-        call.answer(mediaStream);
-        // call.on will emitted when a remote peer adds stream
-        call.on('stream', stream => {
-            addVideoStream(peerVideo, stream); // display remote peer video on my screen
+        const call_mine = myPeer.call(friendID, mediaStream); // call to friend who have friend id is friendID
+        // call is mediaConnection
+        call_mine.on('stream', userVideoStream => {
+            addVideoStream(peerVideo, userVideoStream)
         })
+
+        // myPeer.on will emitted when a remote peer attempts to call you
+        myPeer.on('call', call => { // call is mediaConnection object
+            call.answer(mediaStream);
+            // call.on will emitted when a remote peer adds stream
+            call.on('stream', stream => {
+                addVideoStream(peerVideo, stream); // display remote peer video on my screen
+            })
+            shutdown_btn.addEventListener('click', () => {
+                call.close();
+            })
+            call.on('close', () => {
+                window.location.href = '/chat';
+            })
+        })
+
+
         shutdown_btn.addEventListener('click', () => {
-            call.close();
+            call_mine.close();
         })
-        call.on('close', () => {
+
+        call_mine.on('close', () => {
             window.location.href = '/chat';
         })
-    })
 
+        call_mine.on('error', () => {
+            console.log("met error !");
+        })
 
-    shutdown_btn.addEventListener('click', () => {
-        call_mine.close();
-    })
+        // this function will turn off or on microphone when use click;
+        microphone_btn.addEventListener('click', () => {
+            const audioTrack = mediaStream.getAudioTracks()[0];
+            // change icon microphone
+            if (audioTrack.enabled) {
+                img_microphone.src = "https://img.icons8.com/ios-glyphs/256/block-microphone.png";
+            } else {
+                img_microphone.src = "https://img.icons8.com/ios-glyphs/256/microphone.png";
+            }
+            audioTrack.enabled = !audioTrack.enabled;
+        });
 
-    call_mine.on('close', () => {
-        window.location.href = '/chat';
-    })
+        video_btn.addEventListener('click', () => {
+            const videoTrack = mediaStream.getVideoTracks()[0];
+            // change video icon
+            if (videoTrack.enabled) {
+                img_video.src = "https://img.icons8.com/ios-filled/256/no-video.png";
+            } else {
+                img_video.src = "https://img.icons8.com/sf-black-filled/256/video-call.png";
+            }
+            videoTrack.enabled = !videoTrack.enabled;
+        })
 
-    call_mine.on('error', () => {
-        console.log("met error !");
-    })
-
-    // this function will turn off or on microphone when use click;
-    microphone_btn.addEventListener('click', () => {
-        const audioTrack = mediaStream.getAudioTracks()[0];
-        // change icon microphone
-        if (audioTrack.enabled) {
-            img_microphone.src = "https://img.icons8.com/ios-glyphs/256/block-microphone.png";
-        } else {
-            img_microphone.src = "https://img.icons8.com/ios-glyphs/256/microphone.png";
-        }
-        audioTrack.enabled = !audioTrack.enabled;
-    });
-
-    video_btn.addEventListener('click', () => {
-        const videoTrack = mediaStream.getVideoTracks()[0];
-        // change video icon
-        if (videoTrack.enabled) {
-            img_video.src = "https://img.icons8.com/ios-filled/256/no-video.png";
-        } else {
-            img_video.src = "https://img.icons8.com/sf-black-filled/256/video-call.png";
-        }
-        videoTrack.enabled = !videoTrack.enabled;
     })
 
     function addVideoStream(video, stream) {

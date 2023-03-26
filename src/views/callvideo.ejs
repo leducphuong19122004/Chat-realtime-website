@@ -150,6 +150,7 @@
         });
 
         socket.on('response-to-close-video-call', () => {
+            console.log("are you here !");
             window.location.href = '/chat';
             socket.leave(roomID);
         })

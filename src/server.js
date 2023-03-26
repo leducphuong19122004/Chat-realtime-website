@@ -166,8 +166,16 @@ io.on('connection', (socket) => {
             mess = JSON.stringify(mess); // convert mess to string
 
             connection.execute('UPDATE message SET message = ? WHERE room_id = ?', [mess, room_id]); // update new message to database
+
+            // Send a message to all sockets in the 'room_id' room
             io.to(room_id).emit('chat-reply', { userID: message.userID, message: message.message });
         })
+    })
+
+    socket.on('close-video-call', message => {
+        let room_id = message.roomID;
+        // Send a message to all sockets in the 'room_id' room except for the sender
+        socket.to(room_id).emit('response');
     })
 
 })

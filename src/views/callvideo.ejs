@@ -92,7 +92,7 @@
     let friendID = '<%= friendID %>';
 
     const socket = io();
-    socket.join(roomID);
+    socket.emit('join', { roomID: roomID });
 
     const myVideo = document.querySelector('.video-host');
     const peerVideo = document.querySelector('.video-client');
@@ -147,14 +147,14 @@
 
         shutdown_btn.addEventListener('click', () => {
             call_mine.close(); // Closes the media connection.
-            socket.emit('close-video-call', { roomID: roomID });
-            window.location.href = '/chat';
+            socket.emit('close-video-call');
             socket.leave(roomID);
+            window.location.href = '/chat';
         });
 
         socket.on('response-to-close-video-call', () => {
-            window.location.href = '/chat';
             socket.leave(roomID);
+            window.location.href = '/chat';
         })
 
         // //Emitted when either you or the remote peer closes the data connection.

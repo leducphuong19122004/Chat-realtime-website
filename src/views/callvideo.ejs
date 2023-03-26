@@ -148,12 +148,12 @@
         shutdown_btn.addEventListener('click', () => {
             call_mine.close(); // Closes the media connection.
             socket.emit('close-video-call');
-            socket.leave(roomID);
+            socket.emit('leave', { roomID: roomID });
             window.location.href = '/chat';
         });
 
         socket.on('response-to-close-video-call', () => {
-            socket.leave(roomID);
+            socket.emit('leave', { roomID: roomID });
             window.location.href = '/chat';
         })
 

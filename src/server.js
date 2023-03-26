@@ -155,6 +155,11 @@ io.on('connection', (socket) => {
         socket.join(data.roomID);
     })
 
+    socket.on('leave', data => {
+        room_id = data.roomID;
+        socket.leave(room_id);
+    })
+
     socket.on('chat-message', (message) => { // object message have 3 properties : userID , friendid and message
         // query data to get message of two user
         connection.execute('SELECT * FROM `message`WHERE `room_id` = ?', [room_id]).then(result => {

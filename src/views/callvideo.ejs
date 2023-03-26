@@ -99,22 +99,18 @@
     const img_microphone = document.querySelector('.img_microphone');
     const img_speaker = document.querySelector('.img_speaker');
 
-
-    speaker_btn.addEventListener('click', () => {
-        audio = false;
-    });
-
-
     const myPeer = new Peer(userID);
 
-    navigator.mediaDevices.getUserMedia({ // mediaStream is mediaStream Object 
+    let constraint = {
         video: {
-            width: 1887,
-            height: 895,
+            width: { min: 944, ideal: 1887, max: 1887 },
+            height: { min: 700, ideal: 895, max: 895 }
         },
         audio: true,
-    }).then(mediaStream => {
+    }
 
+    // mediaStream is mediaStream Object  
+    navigator.mediaDevices.getUserMedia(constraint).then(mediaStream => {
         // let newMediaStream = new MediaStream(mediaStream.getTracks());
         // let audioTrack_mine = newStream.getAudioTracks()[0];
         // newMediaStream.removeTrack(audioTrack_mine);
@@ -144,9 +140,13 @@
 
 
         shutdown_btn.addEventListener('click', () => {
-            call_mine.close();
-            window.location.href = '/chat';
+            call_mine.close(); // Closes the media connection.
         });
+
+        //Emitted when either you or the remote peer closes the data connection.
+        call_mine.on('close', () => {
+            window.location.href = '/chat';
+        })
 
         call_mine.on('error', () => {
             console.log("met error !");

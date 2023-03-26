@@ -174,8 +174,9 @@ io.on('connection', (socket) => {
 
     socket.on('close-video-call', message => {
         let room_id = message.roomID;
+        console.log("checking room_id :", room_id);
         // Send a message to all sockets in the 'room_id' room except for the sender
-        socket.to(room_id).emit('response');
+        socket.to(room_id).emit('response-to-close-video-call');
     })
 
 })

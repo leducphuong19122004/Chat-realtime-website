@@ -86,10 +86,13 @@
 <script src="https://unpkg.com/peerjs@1.3.2/dist/peerjs.min.js"></script>
 <script src="https://chat-app-realtime.up.railway.app/client-dist/socket.io.js"></script>
 <script>
-    const socket = io();
+
     const userID = '<%= userID %>';
     const roomID = '<%= roomID %>';
     let friendID = '<%= friendID %>';
+
+    const socket = io();
+    socket.join(roomID);
 
     const myVideo = document.querySelector('.video-host');
     const peerVideo = document.querySelector('.video-client');
@@ -150,7 +153,6 @@
         });
 
         socket.on('response-to-close-video-call', () => {
-            console.log("are you here !");
             window.location.href = '/chat';
             socket.leave(roomID);
         })

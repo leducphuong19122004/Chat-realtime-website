@@ -709,6 +709,7 @@
             function gotoVideoCallPage(friendid) {
                 var url = "/videocall/" + friendid + "/" + roomID;
                 window.location.href = url;
+                socket.leave(roomID);
             }
 
         </script>

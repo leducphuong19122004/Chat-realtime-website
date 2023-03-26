@@ -51,6 +51,7 @@
         width: 100%;
         height: 895px;
         border-radius: 20px;
+        object-fit: cover;
     }
 
     .controls {
@@ -146,6 +147,7 @@
 
         //Emitted when either you or the remote peer closes the data connection.
         call_mine.on('close', () => {
+            console.log("something wrong !");
             window.location.href = '/chat';
         })
 

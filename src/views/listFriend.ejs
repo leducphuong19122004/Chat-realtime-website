@@ -3,10 +3,8 @@
 
 <head>
     <meta charset="utf-8">
-
-
-
-    <title>Clients - Bootdey.com</title>
+    <title>Chat app realtime</title>
+    <link rel="icon" type="image/x-icon" href="styleForStartPage/img/icons8-speech-bubble-100.png">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -184,6 +182,8 @@
                 border-radius: 30px;
                 border: 1px solid #ced4da;
                 padding: 6px 20px;
+                width: 270px;
+
             }
 
             .timeline {
@@ -235,6 +235,7 @@
             .card-body {
                 flex: 1 1 auto;
                 padding: 1.25rem;
+                height: 850px;
             }
 
             .card-header:first-child {
@@ -274,8 +275,19 @@
                 }
             }
         </style>
+        <script src="client-dist/socket.io.js"></script>
         <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
         <script type="text/javascript">
+            const active = document.querySelector("#list-friend");
+            active.setAttribute('class', 'nav_link active');
+            const userID = '<%= userID %>';
+
+            const socket = io();
+            // This event is fired by the Socket instance upon connection and reconnection.
+            socket.on('connect', () => {
+                socket.emit('user-connected', userID);
+
+            })
             let listFriend = document.getElementById("listFriend").querySelectorAll("#friend");
 
             function sendData(e) {

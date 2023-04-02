@@ -5,10 +5,41 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 
 <body>
-    <div style="font-size : 100px">404 Not Found</div>
+    <div class="notFound">404 Not Found</div>
+    <div class="link"> <a href="/">Click this to go to start page</a>
 </body>
+</div>
+
+<style>
+    .notFound {
+        font-size: 100px;
+        font-family: 'Press Start 2P', cursive;
+        position: relative;
+        text-align: center;
+        top: 45%;
+        bottom: 55%;
+    }
+
+    .link {
+        cursor: pointer;
+        position: relative;
+        text-align: center;
+        top: 47%;
+        bottom: 53%;
+        left: 50px;
+        right: 50%;
+    }
+
+    .link:hover {
+        color: chartreuse;
+    }
+</style>
+
 
 </html>

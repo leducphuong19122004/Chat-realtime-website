@@ -3,11 +3,15 @@
 
 <head>
     <meta charset="utf-8">
-    <title>chat app - Bootdey.com</title>
+    <title>Chat app realtime</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="styleForStartPage/img/icons8-speech-bubble-100.png">
 </head>
 
 <body>
@@ -19,10 +23,6 @@
                     <div class="card chat-app">
                         <div id="plist" class="people-list">
                             <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" style="padding-bottom : 10px"><i
-                                            class="fa fa-search"></i></span>
-                                </div>
                                 <input type="text" class="form-control" placeholder="Search...">
                             </div>
                             <ul class="list-unstyled chat-list mt-2 mb-0" id="list">
@@ -33,8 +33,15 @@
                                             <div class="name">
                                                 <%= friend[i].username %>
                                             </div>
-                                            <div class="status"> <i class="fa fa-circle offline"></i> left 7 mins ago
-                                            </div>
+                                            <% if(friend[i].status=="on" ) { %>
+                                                <div class="status"> <i class="fa fa-circle online"></i>
+                                                    <%= friend[i].status %>line
+                                                </div>
+                                                <% } else { %>
+                                                    <div class="status"> <i class="fa fa-circle offline"></i>
+                                                        <%= friend[i].status %>line
+                                                    </div>
+                                                    <% } %>
                                         </div>
                                     </li>
                                     <% } %>
@@ -86,7 +93,6 @@
                                         </a>
                                         <div class="chat-about">
                                             <h6 class="m-b-0" id="nameFriendChatting">No friend selected</h6>
-                                            <small>Last seen: 2 hours ago</small>
                                         </div>
                                     </div>
                                     <div class="col-lg-6 hidden-sm text-right" style="text-align: right;">
@@ -133,16 +139,17 @@
                                 </ul>
                             </div>
                             <form id="form-message">
-                                <div class="chat-message clearfix">
+                                <div class="chat-message clearfix ">
                                     <div class="input-group mb-0">
+                                        <input id="message" type="text" class="form-control"
+                                            placeholder="Enter text here...">
+
                                         <div class="input-group-prepend">
                                             <button style="border: none; padding: 0px 0px 0px 0px;"><span
                                                     class="input-group-text"
                                                     style="padding-top : 8px; padding-bottom : 8px"><i
                                                         class="fa fa-send"></i></span></button>
                                         </div>
-                                        <input id="message" type="text" class="form-control"
-                                            placeholder="Enter text here...">
 
                                     </div>
                                 </div>
@@ -154,11 +161,22 @@
                                 <input name="room_id" type="text" id="roomid_img" hidden />
                             </form>
                         </div>
+                        <!-- <div class="chat">
+                            <div style="text-align: center; width: 100%; height: 900px;">
+                                <div style="font-family: 'Press Start 2P', cursive; font-size: 70px;">Choose friend to
+                                    join chat</div>
+                            </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
         </div>
         <style type="text/css">
+            .bx-log-out:before {
+                content: "\eb4f";
+                font-size: 1.25rem;
+            }
+
             .container {
                 margin-top: 50px;
             }
@@ -166,10 +184,6 @@
             body {
                 background-color: #f4f7f6;
                 margin-top: 20px;
-            }
-
-            .active {
-                color: black !important;
             }
 
             .card {
@@ -181,6 +195,11 @@
                 position: relative;
                 width: 100%;
                 box-shadow: 0 1px 2px 0 rgb(0 0 0 / 10%);
+            }
+
+            .form-control {
+                border-radius: 30px;
+                border: 1px solid #ced4da;
             }
 
             .chat-app .people-list {
@@ -387,6 +406,16 @@
                 cursor: pointer;
             }
 
+            .chat {
+                height: 900px;
+            }
+
+            .chat-message {
+                bottom: 0;
+                position: absolute;
+                width: -webkit-fill-available;
+            }
+
             @media only screen and (max-width: 767px) {
                 .chat-app .people-list {
                     height: 465px;
@@ -463,7 +492,7 @@
                 }
 
                 .chat-app .chat-history {
-                    height: 600px;
+                    height: 760px;
                     overflow-x: auto
                 }
 
@@ -471,15 +500,29 @@
                     max-width: 650px;
                     white-space: normal;
                 }
+
+                .chat {
+                    height: 900px;
+                }
             }
         </style>
         <script src="client-dist/socket.io.js"></script>
         <script type="text/javascript">
+            const active = document.querySelector("#chat");
+            active.setAttribute('class', 'nav_link active');
+
+
             const socket = io();
             let roomID = '';
             const userID = '<%= userID %>';
+            const friend = JSON.parse('<%- JSON.stringify(friend) %>');
             let friendid = ' ';
 
+            // This event is fired by the Socket instance upon connection and reconnection.
+            socket.on('connect', () => {
+                socket.emit('user-connected', userID);
+
+            })
 
             const chatForm = document.querySelector('#form-message');
             const chatMes = document.querySelector('#message');
@@ -487,6 +530,7 @@
             const list = document.getElementById("list").querySelectorAll(".clearfix");
             const text_message = document.getElementById("text-message");
             const image_message = document.getElementById("image_message");
+            const status = document.getElementById("list").querySelectorAll(".status");
 
             function clickInputFunction() {
                 document.getElementById("roomid_img").value = roomID;
@@ -712,6 +756,20 @@
                 window.location.href = url;
             }
 
+            socket.on('updateUserStatus', data => {
+                if (data !== {}) {
+                    for (let i = 0; i < friend.length; i++) {
+                        if (friend[i].userID == data.userID) {
+                            if (data.status == 'on') {
+                                status[i].innerHTML = "<i class='fa fa-circle online'></i> Online";
+                            } else {
+                                status[i].innerHTML = "<i class='fa fa-circle offline'></i> Offline";
+                            }
+                        }
+                    }
+                }
+
+            })
         </script>
 </body>
 

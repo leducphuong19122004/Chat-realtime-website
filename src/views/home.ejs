@@ -4,16 +4,24 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Chat app realtime</title>
+    <link rel="icon" type="image/x-icon" href="styleForStartPage/img/icons8-speech-bubble-100.png">
 </head>
 
 <body>
     <%- include('partials/sidebar.ejs') %>
 </body>
-<script src="https://unpkg.com/peerjs@1.3.2/dist/peerjs.min.js"></script>
-<script>
+<script src="client-dist/socket.io.js"></script>
+<script type="text/javascript">
+    const active = document.querySelector("#home");
+    active.setAttribute('class', 'nav_link active');
     const userID = '<%= userID %>';
+    const socket = io();
+    // This event is fired by the Socket instance upon connection and reconnection.
+    socket.on('connect', () => {
+        socket.emit('user-connected', userID);
+
+    })
 </script>
-<!-- <script src="/logicFile/home.js"></script> -->
 
 </html>

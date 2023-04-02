@@ -3,7 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>CodePen - A Pen by leducphuong</title>
+    <title>Chat app realtime</title>
+    <link rel="icon" type="image/x-icon" href="styleForStartPage/img/icons8-speech-bubble-100.png">
 
 </head>
 
@@ -92,6 +93,10 @@
     let friendID = '<%= friendID %>';
 
     const socket = io();
+    socket.on('connect', () => {
+        socket.emit('user-connected', userID);
+
+    })
     socket.emit('join', { roomID: roomID });
 
     const myVideo = document.querySelector('.video-host');
@@ -156,12 +161,6 @@
             socket.emit('leave', { roomID: roomID });
             window.location.href = '/chat';
         })
-
-        // //Emitted when either you or the remote peer closes the data connection.
-        // call_mine.on('close', () => {
-        //     console.log("something wrong !");
-        //     window.location.href = '/chat';
-        // })
 
         call_mine.on('error', () => {
             console.log("met error !");

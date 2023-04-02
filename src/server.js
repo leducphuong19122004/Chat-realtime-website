@@ -5,6 +5,7 @@ import initAPIRoute from './route/apiRoute.js';
 import morgan from 'morgan';
 import fs from 'fs';
 import path from 'path';
+import util from 'util';
 import cors from 'cors';
 import cookies from 'cookie-parser';
 import passport from 'passport';
@@ -120,10 +121,17 @@ var server = http.createServer(app);
 const hostname = '0.0.0.0';
 
 import { Server } from 'socket.io';
+import { count } from 'console';
 
 const io = new Server(server);
 
 io.on('connection', (socket) => {
+    socket.on('user-connected', userID => {
+        client.hSet('socket', socket.id, userID);
+        client.hSet(userID, 'status', 'on');
+        // Emit the 'userStatusChanged' event to all connected clients
+        io.emit('updateUserStatus', { userID: userID, status: 'on' });
+    })
 
     socket.on('checkID', id => {
         if (id) {
@@ -181,7 +189,27 @@ io.on('connection', (socket) => {
         // Send a message to all sockets in the 'room_id' room except for the sender
         socket.to(room_id).emit('response-to-close-video-call');
     })
+    socket.on('disconnect', async () => {
+        // get user id from disconnected socket
+        const hgetAsync = util.promisify(client.hGet).bind(client);
+        let userID = await hgetAsync('socket', socket.id);
+        // when user disconnect then delete socket in redis
+        const hdelAsync = util.promisify(client.hDel).bind(client);
+        await hdelAsync('socket', socket.id);
 
+        const hvalsAsync = util.promisify(client.hVals).bind(client);
+        setTimeout(async () => {
+            let allUserID = await hvalsAsync("socket");
+            if (allUserID.indexOf(userID) != -1) {
+                // if user temporary disconnect socket (like refesh page or navigate to another route...), then let argument is null
+                io.emit('updateUserStatus', {});
+            } else {
+                // if user really disconnect socket, then set argument has status is off
+                client.hSet(userID, "status", "off");
+                io.emit('updateUserStatus', { userID: userID, status: 'off' });
+            }
+        }, 10000)
+    });
 })
 
 server.listen(process.env.PORT || 3000, hostname, () => console.log(`Server has started ${process.env.PORT}`));

@@ -88,8 +88,11 @@ export let getChatPage = async (req, res) => {
 
     const hgetAsync = util.promisify(client.hGet).bind(client);
     const listFriend = await hgetAsync(RPayload.id, "List_friend");
-
     const friend = JSON.parse(listFriend);
+    for (let i = 0; i < friend.length; i++) {
+        let status = await hgetAsync(friend[i].userID, "status");
+        friend[i].status = status;
+    }
 
     return res.render('chatPage.ejs', { userID: RPayload.id, friend: friend });
 }
@@ -190,7 +193,7 @@ export let getListFriend = async (req, res) => {
     const listFriend_str = await hgetAsync(RPayload.id, "List_friend");
     const friend = JSON.parse(listFriend_str);
 
-    return res.render('listFriend.ejs', { friend: friend });
+    return res.render('listFriend.ejs', { friend: friend, userID: RPayload.id });
 }
 
 export let searchListFriend = async (req, res) => {

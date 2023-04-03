@@ -128,10 +128,6 @@ a {
   padding-left: calc(var(--nav-width) + 1rem);
 }
 
-.active {
-  color: var(--white-color);
-}
-
 .active::before {
   content: '';
   position: absolute;

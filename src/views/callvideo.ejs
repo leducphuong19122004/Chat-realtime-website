@@ -284,16 +284,16 @@
             if (img_screen_sharing.src == "https://cdn-icons-png.flaticon.com/512/566/566068.png") {
 
                 video_host_sreen_sharing.style.display = "block";
-
+                let peer_stream = peerVideo.srcObject; // peerVideo.srcObject returns mediaStream
+                addVideoStream(video_host_sreen_sharing, peer_stream);
+                peerVideo.srcObject.getTracks().forEach(track => track.stop());
                 peerVideo_id.classList.remove('video-client');
 
-                video_host_sreen_sharing.setAttribute('class', 'video-client');
                 // convert icon
                 img_screen_sharing.src = "https://cdn-icons-png.flaticon.com/512/566/566072.png";
                 localStorage.setItem('screen_sharing', true);
                 navigator.mediaDevices.getDisplayMedia(contraint_screen_sharing)
                     .then(new_stream => {
-                        console.log("checking new_stream :", new_stream.getTracks()[0].label)
                         addVideoStream(screen_sharing, new_stream);
                         screen_sharing.style.display = "block";
                         peerVideo.style.display = "none";
@@ -306,9 +306,8 @@
                     })
                 // stop screen sharing
             } else {
-                video_host_sreen_sharing.classList.remove('video-client');
                 peerVideo_id.setAttribute('class', 'video-client');
-                peerVideo.style.display = "block";
+                peerVideo_id.style.display = "block";
 
                 screen_sharing.style.display = "none";
                 let tracks = screen_sharing.srcObject.getTracks();
@@ -330,18 +329,18 @@
         }
         // Listen for new tracks added by the remote peer (listen if remote user share their screen)
         call_mine.on('track', (track, remoteStream) => { // track is new addedtrack
+            console.log("checking track :", track);
             remoteStream.remove(track);
-            if (track.label = 'screen:0:0') {
-                video_host_sreen_sharing.style.display = "block";
-                peerVideo_id.classList.remove('video-client');
-                video_host_sreen_sharing.setAttribute('class', 'video-client');
-                screen_sharing.style.display = "block";
-                peerVideo.style.display = "none";
-                // The MediaStream() constructor returns a newly-created MediaStream, which serves as a collection of media tracks
-                const screen_sharing_stream = new MediaStream(track);
-                addVideoStream(screen_sharing, screen_sharing_stream);
-            }
-
+            video_host_sreen_sharing.style.display = "block";
+            let peer_stream = peerVideo.srcObject; // peerVideo.srcObject returns mediaStream
+            addVideoStream(video_host_sreen_sharing, peer_stream);
+            peerVideo.srcObject.getTracks().forEach(track => track.stop());
+            peerVideo_id.classList.remove('video-client');
+            screen_sharing.style.display = "block";
+            peerVideo_id.style.display = "none";
+            // The MediaStream() constructor returns a newly-created MediaStream, which serves as a collection of media tracks
+            const screen_sharing_stream = new MediaStream(track);
+            addVideoStream(screen_sharing, screen_sharing_stream);
         })
     });
 

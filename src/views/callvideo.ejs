@@ -282,12 +282,11 @@
             event.preventDefault();
             // start screen sharing
             if (img_screen_sharing.src == "https://cdn-icons-png.flaticon.com/512/566/566068.png") {
-
+                screen_sharing.style.display = "block";
                 video_host_sreen_sharing.style.display = "block";
+                peerVideo_id.style.display = "none";
                 let peer_stream = peerVideo.srcObject; // peerVideo.srcObject returns mediaStream
                 addVideoStream(video_host_sreen_sharing, peer_stream);
-                peerVideo.srcObject.getTracks().forEach(track => track.stop());
-                peerVideo_id.classList.remove('video-client');
 
                 // convert icon
                 img_screen_sharing.src = "https://cdn-icons-png.flaticon.com/512/566/566072.png";
@@ -295,8 +294,6 @@
                 navigator.mediaDevices.getDisplayMedia(contraint_screen_sharing)
                     .then(new_stream => {
                         addVideoStream(screen_sharing, new_stream);
-                        screen_sharing.style.display = "block";
-                        peerVideo.style.display = "none";
                         for (const tracks of new_stream.getTracks()) {
                             mediaStream.addTrack(tracks);
                         }
@@ -306,17 +303,16 @@
                     })
                 // stop screen sharing
             } else {
-                peerVideo_id.setAttribute('class', 'video-client');
+                img_screen_sharing.src = "https://cdn-icons-png.flaticon.com/512/566/566068.png";
                 peerVideo_id.style.display = "block";
-
                 screen_sharing.style.display = "none";
                 let tracks = screen_sharing.srcObject.getTracks();
                 tracks.forEach((track) => track.stop());
                 screen_sharing.srcObject = null;
 
-                img_screen_sharing.src = "https://cdn-icons-png.flaticon.com/512/566/566068.png";
-
                 video_host_sreen_sharing.style.display = "none";
+                video_host_sreen_sharing.srcObject.getTrack().forEach(track => track.stop());
+                video_host_sreen_sharing.srcObject = null;
 
                 localStorage.setItem('screen_sharing', false);
 

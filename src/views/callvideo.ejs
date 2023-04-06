@@ -301,6 +301,9 @@
                     .then(() => {
 
                     })
+                    .catch(reason => {
+                        link_screen_sharing.click();
+                    })
                 // stop screen sharing
             } else {
                 img_screen_sharing.src = "https://cdn-icons-png.flaticon.com/512/566/566068.png";

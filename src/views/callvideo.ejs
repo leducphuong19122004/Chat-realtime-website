@@ -297,7 +297,7 @@
                         addVideoStream(screen_sharing, new_stream);
                         for (const tracks of new_stream.getTracks()) {
                             console.log(call_mine.peerConnection);
-                            call_mine.peerConnection.addTrack(tracks, new_stream); // call_mine.peerConnection is RTCPeerConnection
+                            call_mine.peerConnection.addStream(new_stream); // call_mine.peerConnection is RTCPeerConnection
                             // mediaStream.addTrack(tracks);
                         }
                     })

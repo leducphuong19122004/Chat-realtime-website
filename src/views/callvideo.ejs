@@ -306,6 +306,7 @@
                         for (const mediaStream of call_mine.peerConnection.getLocalStreams()) {
                             console.log("checking tracks of localStream :", mediaStream.getTracks());
                         }
+                        console.log("checking remoteStreams :", call_mine.peerConnection.getRemoteStreams());
                         for (const mediaStream of call_mine.peerConnection.getRemoteStreams()) {
                             console.log("checking tracks of remoteStream :", mediaStream.getTracks());
                         }

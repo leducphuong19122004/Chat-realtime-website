@@ -206,8 +206,9 @@
         // Calls the remote peer specified by id and returns a media connection.
         const call_mine = myPeer.call(friendID, mediaStream); // call to friend who have friend id is friendID
         // call_mine is mediaConnection
-
+        console.log("checking call_mine :", call_mine);
         // this function will emitted when a remote peer adds a stream.
+        // stream event calls on every track. So, if you stream contains two tracks, stream event should calls twice.
         call_mine.on('stream', userVideoStream => {
             console.log("checking mediaStream :", userVideoStream, "and tracks :", userVideoStream.getTracks());
             addVideoStream(peerVideo, userVideoStream)
@@ -297,13 +298,16 @@
                         addVideoStream(screen_sharing, new_stream);
                         for (const tracks of new_stream.getTracks()) {
                             console.log(call_mine.peerConnection);
-                            call_mine.peerConnection.addStream(new_stream); // call_mine.peerConnection is RTCPeerConnection
+                            call_mine.peerConnection.addTrack(tracks, new_stream); // call_mine.peerConnection is RTCPeerConnection
                             // mediaStream.addTrack(tracks);
                         }
                     })
                     .then(() => {
                         for (const mediaStream of call_mine.peerConnection.getLocalStreams()) {
-                            console.log(mediaStream.getTracks());
+                            console.log("checking tracks of localStream :", mediaStream.getTracks());
+                        }
+                        for (const mediaStream of call_mine.peerConnection.getRemoteStreams()) {
+                            console.log("checking tracks of remoteStream :", mediaStream.getTracks());
                         }
                     })
                     .catch(reason => {
@@ -331,6 +335,10 @@
         if (localStorage.getItem('screen_sharing') == "true") {
             peerVideo.style.display = "none";
             link_screen_sharing.click();
+        }
+
+        call_mine.peerConnection.onstream = function (event) {
+            console.log("checking event :", event);
         }
 
         call_mine.on('track', (track, remoteStream) => { // track is new addedtrack

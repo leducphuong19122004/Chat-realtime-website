@@ -301,7 +301,16 @@
                         }
                     })
                     .then(() => {
+                        var senders = call_mine.peerConnection.getSenders();
+                        for (let i = 0; i < senders.length; i++) {
+                            var track = senders[i].track;
+                            if (track) {
+                                var mediaStream = track.getCapabilities().source;
 
+                                // Handle the mediaStream object as needed
+                                console.log("checking mediaStream :", mediaStream);
+                            }
+                        }
                     })
                     .catch(reason => {
                         link_screen_sharing.click();

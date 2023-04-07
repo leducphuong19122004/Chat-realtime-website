@@ -338,7 +338,7 @@
         }
 
         call_mine.peerConnection.onaddstream = function (event) {
-            console.log("checking event :", event);
+            console.log(event.stream.getTracks());
         }
 
         call_mine.on('track', (track, remoteStream) => { // track is new addedtrack

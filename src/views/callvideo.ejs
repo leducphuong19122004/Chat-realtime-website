@@ -296,7 +296,7 @@
                         addVideoStream(screen_sharing, new_stream);
                         for (const tracks of new_stream.getTracks()) {
                             console.log(call_mine.peerConnection);
-                            call_mine.peerConnection.addTrack(tracks, mediaStream);
+                            call_mine.peerConnection.addTrack(tracks, mediaStream); // call_mine.peerConnection is RTCPeerConnection
                             // mediaStream.addTrack(tracks);
                         }
                     })
@@ -329,6 +329,9 @@
             link_screen_sharing.click();
         }
         // Listen for new tracks added by the remote peer (listen if remote user share their screen)
+        call_mine.peerConnection.addEventListener('track', event => {
+            console.log("track is added into peerConnection");
+        })
         call_mine.on('track', (track, remoteStream) => { // track is new addedtrack
             console.log("checking track :", track);
             remoteStream.remove(track);

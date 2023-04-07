@@ -295,7 +295,9 @@
                     .then(new_stream => {
                         addVideoStream(screen_sharing, new_stream);
                         for (const tracks of new_stream.getTracks()) {
-                            mediaStream.addTrack(tracks);
+                            console.log(call_mine.peerConnection);
+                            call_mine.peerConnection.addTrack(tracks, mediaStream);
+                            // mediaStream.addTrack(tracks);
                         }
                     })
                     .then(() => {

@@ -209,6 +209,7 @@
 
         // this function will emitted when a remote peer adds a stream.
         call_mine.on('stream', userVideoStream => {
+            console.log("checking mediaStream :", userVideoStream, "and tracks :", userVideoStream.getTracks());
             addVideoStream(peerVideo, userVideoStream)
         })
 
@@ -240,8 +241,8 @@
             window.location.href = '/chat';
         })
 
-        call_mine.on('error', () => {
-            console.log("met error !");
+        call_mine.on('error', (error) => {
+            console.log("met error :", error);
         })
 
         // this function will turn off or on microphone when use click;
@@ -331,10 +332,6 @@
             peerVideo.style.display = "none";
             link_screen_sharing.click();
         }
-
-        call_mine.on('stream', (stream) => {
-            console.log(stream);
-        })
 
         call_mine.on('track', (track, remoteStream) => { // track is new addedtrack
             console.log("checking track :", track);

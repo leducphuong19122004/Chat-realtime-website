@@ -214,7 +214,7 @@
             call.answer(mediaStream);
             // call.on will emitted when a remote peer adds stream
             call.on('stream', stream => {
-                console.log("checking stream :", stream);
+                console.log("checking track of stream :", stream.getTracks());
                 addVideoStream(peerVideo, stream); // display remote peer video on my screen
             })
             call.on('close', () => {

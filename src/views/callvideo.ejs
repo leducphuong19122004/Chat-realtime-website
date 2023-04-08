@@ -223,11 +223,13 @@
                     peerVideo_id.style.display = "none";
                     peerVideo.srcObject = null;
 
+                    const track_screen_sharing = stream.getTracks()[2];
                     const array_track = [stream.getTracks()[0], stream.getTracks()[1]];
+
                     const mediaStream = new MediaStream(array_track);
                     addVideoStream(video_host_sreen_sharing, mediaStream);
 
-                    const mediaStream_screen_sharing = new MediaStream(stream.getTracks()[2]);
+                    const mediaStream_screen_sharing = new MediaStream(track_screen_sharing);
                     addVideoStream(screen_sharing, mediaStream_screen_sharing);
                 } else {
                     addVideoStream(peerVideo, stream); // display remote peer video on my screen

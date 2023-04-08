@@ -224,6 +224,7 @@
                     stream.removeTrack(stream.getTracks()[0]);
                     stream.removeTrack(stream.getTracks()[1]);
 
+                    console.log("checking stream :", stream, "checking track :", stream.getTracks());
                     addVideoStream(screen_sharing, stream);
                 } else {
                     addVideoStream(peerVideo, stream); // display remote peer video on my screen

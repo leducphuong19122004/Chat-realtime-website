@@ -213,8 +213,6 @@
             // call.on will emitted when a remote peer adds stream
             call.on('stream', stream => {
                 if (stream.getTracks().length == 3 && screen_sharing.style.display == "none") {
-                    console.log(stream.getTracks());
-
                     video_host_sreen_sharing.style.display = "block";
                     screen_sharing.style.display = "block";
                     peerVideo_id.style.display = "none";
@@ -223,9 +221,8 @@
                     const mediaStream = new MediaStream(array_track);
                     addVideoStream(video_host_sreen_sharing, mediaStream);
                     stream.removeTrack(stream.getTracks()[0]);
-                    stream.removeTrack(stream.getTracks()[1]);
+                    stream.removeTrack(stream.getTracks()[0]);
 
-                    console.log("checking stream :", stream, "checking track :", stream.getTracks());
                     addVideoStream(screen_sharing, stream);
                 } else {
                     addVideoStream(peerVideo, stream); // display remote peer video on my screen

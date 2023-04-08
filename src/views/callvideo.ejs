@@ -257,7 +257,10 @@
                         socket.emit('screen-sharing', message);
                         myPeer.call(friendID, mediaStream);
                         for (const mediaStream of call_mine.peerConnection.getLocalStreams()) {
-                            console.log("checking tracks of localStream :", mediaStream.getTracks(), "deviceid :", mediaStream.getTracks().getSettings());
+                            console.log("checking tracks of localStream :", mediaStream.getTracks());
+                            for (const track of mediaStream.getTracks()) {
+                                console.log("device id :", track.getSettings());
+                            }
                         }
                         console.log("checking remoteStreams :", call_mine.peerConnection.getRemoteStreams());
                         for (const mediaStream of call_mine.peerConnection.getRemoteStreams()) {

@@ -214,6 +214,7 @@
             // call.on will emitted when a remote peer adds stream
             call.on('stream', stream => {
                 if (stream.getTracks().length == 3 && screen_sharing.style.display == "none") {
+                    console.log("checking tracks :", stream.getTracks());
                     for (const track of stream.getTracks()) {
                         console.log("checking track of stream :", track.getSettings());
                     }
@@ -256,7 +257,7 @@
                         socket.emit('screen-sharing', message);
                         myPeer.call(friendID, mediaStream);
                         for (const mediaStream of call_mine.peerConnection.getLocalStreams()) {
-                            console.log("checking tracks of localStream :", mediaStream.getTracks());
+                            console.log("checking tracks of localStream :", mediaStream.getTracks(), "deviceid :", mediaStream.getTracks().getSettings());
                         }
                         console.log("checking remoteStreams :", call_mine.peerConnection.getRemoteStreams());
                         for (const mediaStream of call_mine.peerConnection.getRemoteStreams()) {

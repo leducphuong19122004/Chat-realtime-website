@@ -201,7 +201,6 @@
         // Calls the remote peer specified by id and returns a media connection.
         const call_mine = myPeer.call(friendID, mediaStream); // call to friend who have friend id is friendID
         // call_mine is mediaConnection
-        console.log("checking call_mine :", call_mine);
         // this function will emitted when a remote peer adds a stream.
         // stream event calls on every track. So, if you stream contains two tracks, stream event should calls twice.
         call_mine.on('stream', userVideoStream => {
@@ -214,8 +213,17 @@
             call.answer(mediaStream);
             // call.on will emitted when a remote peer adds stream
             call.on('stream', stream => {
-                console.log("checking track of stream :", stream.getTracks());
-                addVideoStream(peerVideo, stream); // display remote peer video on my screen
+                if (stream.getTracks().length == 3 && screen_sharing.style.display == "none") {
+                    for (const track of stream.getTracks()) {
+                        console.log("checking track of stream :", track.getSettings());
+                    }
+                    video_host_sreen_sharing.style.display = "block";
+                    screen_sharing.style.display = "block";
+                    peerVideo_id.style.display = "none";
+                    peerVideo.srcObject = null;
+                } else {
+                    addVideoStream(peerVideo, stream); // display remote peer video on my screen
+                }
             })
             call.on('close', () => {
                 call_mine.close();
@@ -240,8 +248,6 @@
                     .then(new_stream => {
                         addVideoStream(screen_sharing, new_stream);
                         for (const tracks of new_stream.getTracks()) {
-                            console.log(call_mine.peerConnection);
-                            // call_mine.peerConnection.addTrack(tracks, mediaStream); // call_mine.peerConnection is RTCPeerConnection
                             mediaStream.addTrack(tracks);
                         }
                     })

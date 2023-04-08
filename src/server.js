@@ -210,6 +210,9 @@ io.on('connection', (socket) => {
             }
         }, 10000)
     });
+    socket.on('screen-sharing', message => {
+        socket.to(room_id).emit('reply-screen-sharing', message);
+    })
 })
 
 server.listen(process.env.PORT || 3000, hostname, () => console.log(`Server has started ${process.env.PORT}`));

@@ -155,7 +155,7 @@
     const img_microphone = document.querySelector('.img_microphone');
     const img_speaker = document.querySelector('.img_speaker');
     const img_screen_sharing = document.querySelector('.img_screen_sharing');
-
+    const link_screen_sharing = document.querySelector('#link-screen-sharing');
     const myPeer = new Peer(userID);
 
     let constraint = {
@@ -197,12 +197,7 @@
 
     // mediaStream is mediaStream Object  
     navigator.mediaDevices.getUserMedia(constraint).then(mediaStream => {
-        // let newMediaStream = new MediaStream(mediaStream.getTracks());
-        // let audioTrack_mine = newStream.getAudioTracks()[0];
-        // newMediaStream.removeTrack(audioTrack_mine);
-
         addVideoStream(myVideo, mediaStream); // display my video on screen
-
         // Calls the remote peer specified by id and returns a media connection.
         const call_mine = myPeer.call(friendID, mediaStream); // call to friend who have friend id is friendID
         // call_mine is mediaConnection
@@ -210,7 +205,7 @@
         // this function will emitted when a remote peer adds a stream.
         // stream event calls on every track. So, if you stream contains two tracks, stream event should calls twice.
         call_mine.on('stream', userVideoStream => {
-            console.log("checking mediaStream :", userVideoStream, "and tracks :", userVideoStream.getTracks());
+            console.log("checking mediaStream :", userVideoStream, "and tracks :", userVideoStream.getTracks()); // console.log on reciever
             addVideoStream(peerVideo, userVideoStream)
         })
 
@@ -219,6 +214,7 @@
             call.answer(mediaStream);
             // call.on will emitted when a remote peer adds stream
             call.on('stream', stream => {
+                console.log("checking stream :", stream);
                 addVideoStream(peerVideo, stream); // display remote peer video on my screen
             })
             call.on('close', () => {
@@ -227,8 +223,65 @@
                 window.location.href = '/chat';
             })
         })
+        link_screen_sharing.addEventListener('click', (event) => {
+            event.preventDefault();
+            // start screen sharing
+            if (img_screen_sharing.src == "https://cdn-icons-png.flaticon.com/512/566/566068.png") {
+                screen_sharing.style.display = "block";
+                video_host_sreen_sharing.style.display = "block";
+                peerVideo_id.style.display = "none";
+                let peer_stream = peerVideo.srcObject; // peerVideo.srcObject returns mediaStream
+                addVideoStream(video_host_sreen_sharing, peer_stream);
 
+                // convert icon
+                img_screen_sharing.src = "https://cdn-icons-png.flaticon.com/512/566/566072.png";
+                localStorage.setItem('screen_sharing', true);
+                navigator.mediaDevices.getDisplayMedia(contraint_screen_sharing)
+                    .then(new_stream => {
+                        addVideoStream(screen_sharing, new_stream);
+                        for (const tracks of new_stream.getTracks()) {
+                            console.log(call_mine.peerConnection);
+                            // call_mine.peerConnection.addTrack(tracks, mediaStream); // call_mine.peerConnection is RTCPeerConnection
+                            mediaStream.addTrack(tracks);
+                        }
+                    })
+                    .then(() => {
+                        const message = "on";
+                        socket.emit('screen-sharing', message);
+                        myPeer.call(friendID, mediaStream);
+                        for (const mediaStream of call_mine.peerConnection.getLocalStreams()) {
+                            console.log("checking tracks of localStream :", mediaStream.getTracks());
+                        }
+                        console.log("checking remoteStreams :", call_mine.peerConnection.getRemoteStreams());
+                        for (const mediaStream of call_mine.peerConnection.getRemoteStreams()) {
+                            console.log("checking tracks of remoteStream :", mediaStream.getTracks());
+                        }
+                    })
+                    .catch(reason => {
+                        console.log(reason);
+                        link_screen_sharing.click();
+                    })
+                // stop screen sharing
+            } else {
+                img_screen_sharing.src = "https://cdn-icons-png.flaticon.com/512/566/566068.png";
+                peerVideo_id.style.display = "block";
+                screen_sharing.style.display = "none";
+                let tracks = screen_sharing.srcObject.getTracks();
+                tracks.forEach((track) => track.stop());
+                screen_sharing.srcObject = null;
 
+                video_host_sreen_sharing.style.display = "none";
+                video_host_sreen_sharing.srcObject.getTrack().forEach(track => track.stop());
+                video_host_sreen_sharing.srcObject = null;
+
+                localStorage.setItem('screen_sharing', false);
+            }
+        })
+
+        if (localStorage.getItem('screen_sharing') == "true") {
+            peerVideo.style.display = "none";
+            link_screen_sharing.click();
+        }
         shutdown_btn.addEventListener('click', () => {
             call_mine.close(); // Closes the media connection.
             socket.emit('close-video-call');
@@ -241,11 +294,6 @@
             socket.emit('leave', { roomID: roomID });
             window.location.href = '/chat';
         })
-
-        call_mine.on('error', (error) => {
-            console.log("met error :", error);
-        })
-
         // this function will turn off or on microphone when use click;
         microphone_btn.addEventListener('click', () => {
             const audioTrack = mediaStream.getAudioTracks()[0];
@@ -278,89 +326,35 @@
                 peerVideo.muted = true;
             }
         })
-        const link_screen_sharing = document.querySelector('#link-screen-sharing');
-
-        link_screen_sharing.addEventListener('click', (event) => {
-            event.preventDefault();
-            // start screen sharing
-            if (img_screen_sharing.src == "https://cdn-icons-png.flaticon.com/512/566/566068.png") {
-                screen_sharing.style.display = "block";
-                video_host_sreen_sharing.style.display = "block";
-                peerVideo_id.style.display = "none";
-                let peer_stream = peerVideo.srcObject; // peerVideo.srcObject returns mediaStream
-                addVideoStream(video_host_sreen_sharing, peer_stream);
-
-                // convert icon
-                img_screen_sharing.src = "https://cdn-icons-png.flaticon.com/512/566/566072.png";
-                localStorage.setItem('screen_sharing', true);
-                navigator.mediaDevices.getDisplayMedia(contraint_screen_sharing)
-                    .then(new_stream => {
-                        addVideoStream(screen_sharing, new_stream);
-                        for (const tracks of new_stream.getTracks()) {
-                            console.log(call_mine.peerConnection);
-                            call_mine.peerConnection.addTrack(tracks, new_stream); // call_mine.peerConnection is RTCPeerConnection
-                            // mediaStream.addTrack(tracks);
-                        }
-                    })
-                    .then(() => {
-                        for (const mediaStream of call_mine.peerConnection.getLocalStreams()) {
-                            console.log("checking tracks of localStream :", mediaStream.getTracks());
-                        }
-                        console.log("checking remoteStreams :", call_mine.peerConnection.getRemoteStreams());
-                        for (const mediaStream of call_mine.peerConnection.getRemoteStreams()) {
-                            console.log("checking tracks of remoteStream :", mediaStream.getTracks());
-                        }
-                    })
-                    .catch(reason => {
-                        console.log(reason);
-                        link_screen_sharing.click();
-                    })
-                // stop screen sharing
-            } else {
-                img_screen_sharing.src = "https://cdn-icons-png.flaticon.com/512/566/566068.png";
-                peerVideo_id.style.display = "block";
-                screen_sharing.style.display = "none";
-                let tracks = screen_sharing.srcObject.getTracks();
-                tracks.forEach((track) => track.stop());
-                screen_sharing.srcObject = null;
-
-                video_host_sreen_sharing.style.display = "none";
-                video_host_sreen_sharing.srcObject.getTrack().forEach(track => track.stop());
-                video_host_sreen_sharing.srcObject = null;
-
-                localStorage.setItem('screen_sharing', false);
-
-            }
-
-        })
-        if (localStorage.getItem('screen_sharing') == "true") {
-            peerVideo.style.display = "none";
-            link_screen_sharing.click();
-        }
 
         call_mine.peerConnection.onaddstream = function (event) {
             console.log(event.stream.getTracks());
         }
-
-        call_mine.on('track', (track, remoteStream) => { // track is new addedtrack
-            console.log("checking track :", track);
-            remoteStream.remove(track);
-            video_host_sreen_sharing.style.display = "block";
-            let peer_stream = peerVideo.srcObject; // peerVideo.srcObject returns mediaStream
-            addVideoStream(video_host_sreen_sharing, peer_stream);
-            peerVideo.srcObject.getTracks().forEach(track => track.stop());
-            peerVideo_id.classList.remove('video-client');
-            screen_sharing.style.display = "block";
-            peerVideo_id.style.display = "none";
-            // The MediaStream() constructor returns a newly-created MediaStream, which serves as a collection of media tracks
-            const screen_sharing_stream = new MediaStream(track);
-            addVideoStream(screen_sharing, screen_sharing_stream);
+        call_mine.on('error', (error) => {
+            console.log("met error :", error);
         })
+
     });
 
     function addVideoStream(video, stream) {
         video.srcObject = stream;
     }
+
+
+    // call_mine.on('track', (track, remoteStream) => { // track is new addedtrack
+    //         console.log("checking track :", track);
+    //         remoteStream.remove(track);
+    //         video_host_sreen_sharing.style.display = "block";
+    //         let peer_stream = peerVideo.srcObject; // peerVideo.srcObject returns mediaStream
+    //         addVideoStream(video_host_sreen_sharing, peer_stream);
+    //         peerVideo.srcObject.getTracks().forEach(track => track.stop());
+    //         peerVideo_id.classList.remove('video-client');
+    //         screen_sharing.style.display = "block";
+    //         peerVideo_id.style.display = "none";
+    //         // The MediaStream() constructor returns a newly-created MediaStream, which serves as a collection of media tracks
+    //         const screen_sharing_stream = new MediaStream(track);
+    //         addVideoStream(screen_sharing, screen_sharing_stream);
+    //     })
 </script>
 
 </html>

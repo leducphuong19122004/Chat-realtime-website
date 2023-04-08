@@ -204,7 +204,6 @@
         // this function will emitted when a remote peer adds a stream.
         // stream event calls on every track. So, if you stream contains two tracks, stream event should calls twice.
         call_mine.on('stream', userVideoStream => {
-            console.log("checking mediaStream :", userVideoStream, "and tracks :", userVideoStream.getTracks()); // console.log on reciever
             addVideoStream(peerVideo, userVideoStream)
         })
 
@@ -214,23 +213,17 @@
             // call.on will emitted when a remote peer adds stream
             call.on('stream', stream => {
                 if (stream.getTracks().length == 3 && screen_sharing.style.display == "none") {
-                    console.log("checking tracks :", stream.getTracks());
-                    for (const track of stream.getTracks()) {
-                        console.log("checking track of stream :", track.getSettings());
-                    }
                     video_host_sreen_sharing.style.display = "block";
                     screen_sharing.style.display = "block";
                     peerVideo_id.style.display = "none";
                     peerVideo.srcObject = null;
 
                     const track_screen_sharing = stream.getTracks()[2];
-                    const array_track = [stream.getTracks()[0], stream.getTracks()[1]];
-
-                    const mediaStream = new MediaStream(array_track);
-                    addVideoStream(video_host_sreen_sharing, mediaStream);
-
                     const mediaStream_screen_sharing = new MediaStream(track_screen_sharing);
                     addVideoStream(screen_sharing, mediaStream_screen_sharing);
+                    stream.removeTrack(stream.getTracks()[2]);
+
+                    addVideoStream(video_host_sreen_sharing, stream);
                 } else {
                     addVideoStream(peerVideo, stream); // display remote peer video on my screen
                 }
@@ -262,19 +255,7 @@
                         }
                     })
                     .then(() => {
-                        const message = "on";
-                        socket.emit('screen-sharing', message);
                         myPeer.call(friendID, mediaStream);
-                        for (const mediaStream of call_mine.peerConnection.getLocalStreams()) {
-                            console.log("checking tracks of localStream :", mediaStream.getTracks());
-                            for (const track of mediaStream.getTracks()) {
-                                console.log("device id :", track.getSettings());
-                            }
-                        }
-                        console.log("checking remoteStreams :", call_mine.peerConnection.getRemoteStreams());
-                        for (const mediaStream of call_mine.peerConnection.getRemoteStreams()) {
-                            console.log("checking tracks of remoteStream :", mediaStream.getTracks());
-                        }
                     })
                     .catch(reason => {
                         console.log(reason);

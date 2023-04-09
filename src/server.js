@@ -184,6 +184,12 @@ io.on('connection', (socket) => {
             io.to(room_id).emit('chat-reply', { userID: message.userID, message: message.message });
         })
     })
+    socket.on('call-video', data => {
+        io.emit('response-to-call-video', data);
+    })
+    socket.on('reject-call-video', data => {
+        io.emit('response-reject-call-video', data);
+    })
 
     socket.on('close-video-call', () => {
         // Send a message to all sockets in the 'room_id' room except for the sender

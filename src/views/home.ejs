@@ -6,11 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat app realtime</title>
     <link rel="icon" type="image/x-icon" href="styleForStartPage/img/icons8-speech-bubble-100.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Questrial&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="style_for_login_page/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="style_for_chat_page/css/Account-setting-or-edit-profile.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <link rel="stylesheet" href="style_for_chat_page/css/zectStudio---Sidebar-Menu-by-bbbootstrap.css">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
 </head>
 
 <body>
-    <%- include('partials/sidebar.ejs') %>
+    <%- include('partials/popup_video_call.ejs') %>
+        <%- include('partials/sidebar.ejs') %>
 </body>
+<style>
+    body {
+        font-family: 'Questrial', sans-serif;
+    }
+</style>
 <script src="client-dist/socket.io.js"></script>
 <script type="text/javascript">
     const active = document.querySelector("#home");
@@ -22,6 +38,36 @@
         socket.emit('user-connected', userID);
 
     })
+    const callsound = document.querySelector('.callsound');
+    socket.on('response-to-call-video', data => {
+        if (data.friendID == userID) {
+            const text = data.caller_name + " đang gọi cho bạn...";
+            if (confirm(text) == true) {
+                var url = "/videocall/" + friendid + "/" + roomID;
+                socket.emit('leave', { roomID: roomID });
+                window.location.href = url;
+            } else {
+                socket.emit('reject-call-video', data);
+            }
+            setTimeout(() => {
+                socket.emit('reject-call-video', data);
+            }, 60000);
+        }
+    })
+    socket.on('response-reject-call-video', data => {
+        if (data.callerID == userID) {
+            const text = data.reciever_name.trim() + " đã từ chối cuộc gọi của bạn";
+            alert(text);
+        }
+    })
+    // is fired when user closes tab / browser or navigates to another page event
+    window.addEventListener('beforeunload', function () {
+        socket.disconnect(true);
+    });
+    // is fired when the browser has lost access to the network
+    window.addEventListener("offline", () => {
+        socket.disconnect(true);
+    });
 </script>
 
 </html>

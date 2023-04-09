@@ -94,7 +94,9 @@ export let getChatPage = async (req, res) => {
         friend[i].status = status;
     }
 
-    return res.render('chatPage.ejs', { userID: RPayload.id, friend: friend });
+    const data = await connection.execute('SELECT `username` FROM `information_of_users` WHERE `userID` = ?', [RPayload.id]);
+
+    return res.render('chatPage.ejs', { userID: RPayload.id, friend: friend, username: data[0][0].username });
 }
 
 export let showChatMessage = (req, res) => {

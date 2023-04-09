@@ -57,11 +57,9 @@
   -moz-border-radius: 5px;
   border-radius: 5px;
   border: 0;
-  margin-bottom: 1rem;
 }
 
 .nav_link.signout {
   bottom: 0;
   position: absolute;
 }
-

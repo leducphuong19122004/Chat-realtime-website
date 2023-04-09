@@ -5,12 +5,13 @@
     <meta charset="UTF-8">
     <title>Chat app realtime</title>
     <link rel="icon" type="image/x-icon" href="styleForStartPage/img/icons8-speech-bubble-100.png">
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Questrial&display=swap" rel="stylesheet">
 </head>
 
 
 <body>
-    <!-- partial:index.partial.html -->
     <div class="container">
         <div class="row">
             <div class="col-1">
@@ -42,6 +43,10 @@
 
 </body>
 <style>
+    body {
+        font-family: 'Questrial', sans-serif;
+    }
+
     .col-1 {
         flex-basis: 65%;
     }
@@ -126,6 +131,7 @@
     const userID = '<%= userID %>';
     const roomID = '<%= roomID %>';
     let friendID = '<%= friendID %>';
+    const callsound = document.querySelector('.callsound');
 
     const socket = io();
     socket.on('connect', () => {
@@ -133,10 +139,28 @@
 
     })
     socket.emit('join', { roomID: roomID });
-    socket.on('disconnect', () => {
-        localStorage.setItem('screen_sharing', false);
+    socket.on('response-to-call-video', data => {
+        if (data.friendID == userID) {
+            const text = data.caller_name + " đang gọi cho bạn...";
+            if (confirm(text) == true) {
+                var url = "/videocall/" + friendid + "/" + roomID;
+                socket.emit('leave', { roomID: roomID });
+                window.location.href = url;
+            } else {
+                socket.emit('reject-call-video', data);
+            }
+            setTimeout(() => {
+                socket.emit('reject-call-video', data);
+            }, 60000);
+        }
     })
-
+    socket.on('response-reject-call-video', data => {
+        if (data.callerID == userID) {
+            const text = data.reciever_name.trim() + " đã từ chối cuộc gọi của bạn";
+            alert(text);
+            shutdown_btn.click();
+        }
+    })
 
     const myVideo = document.querySelector('.video-host');
     const peerVideo = document.querySelector('.video-client');
@@ -346,6 +370,17 @@
         video.srcObject = null;
         video.srcObject = stream;
     }
+    // is fired when user closes tab / browser or navigates to another page event
+    window.addEventListener('beforeunload', function () {
+        socket.disconnect(true);
+    });
+    // is fired when the browser has lost access to the network
+    window.addEventListener("offline", () => {
+        socket.disconnect(true);
+    });
+    socket.on('disconnect', () => {
+        localStorage.setItem('screen_sharing', false);
+    })
 </script>
 
 </html>

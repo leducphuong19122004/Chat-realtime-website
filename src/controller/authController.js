@@ -4,9 +4,11 @@ import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 dotenv.config();
 import { NotFoundError } from "../services/utility.js";
+import { sendEmailVerify } from '../services/email.js';
 import { v4 as uuidv4 } from 'uuid';
 import * as redis from 'redis'; // Dòng này đc thêm vào để fix lỗi TypeError: Cannot read properties of undefined (reading 'createClient')
 import checkingUser from '../configs/connectDB_passportjs.js';
+import connection from '../configs/connectDB.js';
 
 const client = redis.createClient({
     host: process.env.REDISHOST,
@@ -24,32 +26,35 @@ client
 
 // Register a new User
 export let register = async (req, res) => {
-    // generate random id for user
-    const userID = uuidv4();
-    //Hash password
-    const salt = await bcrypt.genSalt(10);
-    const hasPassword = await bcrypt.hash(req.body.password, salt);
-
-    // Create an user object
-    const user = new User({
-        mobile: req.body.mobilenumber,
-        email: req.body.email,
-        name: req.body.username,
-        password: hasPassword,
-        userID: userID,
-        status: req.body.status || 1
-    });
-    // Save User in the database
     try {
-        const id = await User.create(user);
-        if (id == 1) {
-            return res.send("email or mobile number existed");
+        // check email and phone number of new user
+        const data = await connection.execute('SELECT * FROM `information_of_users` WHERE email = ? OR mobilenumber = ?', [req.body.email, req.body.mobilenumber]);
+        if (data[0][0] != []) {
+            res.send({ message: '0' });
+        } else {
+            // generate random id for user
+            const userID = uuidv4();
+            //Hash password
+            const salt = await bcrypt.genSalt(10);
+            const hasPassword = await bcrypt.hash(req.body.password, salt);
+            const replace_hasPassword = hasPassword.replaceAll("/", "~");
+            const user = {
+                mobile: req.body.mobilenumber,
+                email: req.body.email,
+                name: req.body.username,
+                password: req.body.password,
+                userID: userID,
+            }
+            const string_user = JSON.stringify(user);
+            await client.hSet('new_user', userID, string_user);
+            await sendEmailVerify(req.body.email, replace_hasPassword, userID);
+            res.send({ message: '1' });
         }
-        res.render('login_form.ejs');
+
     }
     catch (err) {
-        res.status(500).send(err);
-        console.log("error in crete user")
+        res.status(500).send({ error: err });
+        console.log("error in regiser user")
     }
 };
 
@@ -59,24 +64,30 @@ export let login = async (req, res) => {
         const user = await User.login(req.body);
         if (user) {
             const validPass = await bcrypt.compare(req.body.password, user[0].password);
+            // if password is wrong
             if (!validPass) {
-                return res.status(400).send("Mobile/Email or Password is wrong");
-            }
-            // Create and assign token
-            const Atoken = await jwt.sign({ id: user[0].userID }, process.env.TOKEN_SECRET, { expiresIn: '10m' });
-            // store token in cookie so that people cant access token in brower using javascript 
-            await res.cookie('access_token', Atoken, {
-                httpOnly: true,
-                //secure: true;
-            })
+                return res.send({ message: '0' });
+            } else {
+                // Create and assign token
+                const Atoken = await jwt.sign({ id: user[0].userID }, process.env.TOKEN_SECRET, { expiresIn: '10m' });
+                // store token in cookie so that people cant access token in brower using javascript 
+                await res.cookie('access_token', Atoken, {
+                    httpOnly: true,
+                    //secure: true;
+                })
 
-            // create refesh token 
-            const Rtoken = await jwt.sign({ id: user[0].userID }, process.env.TOKEN_SECRET, { expiresIn: '30d' });
-            await res.cookie('refresh_token', Rtoken, {
-                httpOnly: true,
-                //secure: true;
-            })
-            res.status(200).redirect('/home');
+                // create refesh token 
+                const Rtoken = await jwt.sign({ id: user[0].userID }, process.env.TOKEN_SECRET, { expiresIn: '30d' });
+                await res.cookie('refresh_token', Rtoken, {
+                    httpOnly: true,
+                    //secure: true;
+                })
+                res.send({ message: '1' });
+            }
+
+        } else {
+            // if user dont exist
+            res.send({ message: '0' });
         }
     }
     catch (err) {

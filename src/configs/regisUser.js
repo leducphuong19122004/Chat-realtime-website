@@ -11,7 +11,6 @@ const User = function (user) {
     this.name = user.name;
     this.password = user.password;
     this.userID = user.userID;
-    this.status = user.status;
     if (typeof user.created_at != 'undefined') {
         this.created_at = user.created_at;
     }
@@ -59,11 +58,11 @@ User.findBy = async (data, field, attach_additional_data = false) => {
 
 User.login = async (value) => {
     let row = await connection.execute(`SELECT * FROM information_of_users WHERE  email = ?`, [value.email]);
-    if (row.length) {
+    if (row[0][0] != []) {
         return row[0];
     }
     else {
-        throw new NotFoundError("User does not exist");
+       return null;
     }
 };
 

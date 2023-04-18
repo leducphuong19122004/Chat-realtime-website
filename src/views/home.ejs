@@ -21,10 +21,17 @@
 <body>
     <%- include('partials/popup_video_call.ejs') %>
         <%- include('partials/sidebar.ejs') %>
+            <%- include('partials/popup_notification.ejs') %>
 </body>
 <style>
+    .bx-log-out:before {
+        content: "\eb4f";
+        font-size: 1.25rem;
+    }
+
     body {
         font-family: 'Questrial', sans-serif;
+        overflow: hidden;
     }
 </style>
 <script src="client-dist/socket.io.js"></script>
@@ -41,25 +48,69 @@
     const callsound = document.querySelector('.callsound');
     socket.on('response-to-call-video', data => {
         if (data.friendID == userID) {
-            const text = data.caller_name + " đang gọi cho bạn...";
-            if (confirm(text) == true) {
+            popup.style.display = "flex";
+            text.textContent = data.caller_name + " đang gọi cho bạn...";
+            call_off_btn.addEventListener('click', event => {
+                clearTimeout(timeout);
+                popup.style.display = "none";
+                socket.emit('reject-call-video', data);
+            });
+            call_on_btn.addEventListener('click', event => {
+                clearTimeout(timeout);
                 var url = "/videocall/" + friendid + "/" + roomID;
                 socket.emit('leave', { roomID: roomID });
                 window.location.href = url;
-            } else {
+            })
+            const timeout = setTimeout(() => {
+                popup.style.display = "none";
                 socket.emit('reject-call-video', data);
-            }
-            setTimeout(() => {
-                socket.emit('reject-call-video', data);
-            }, 60000);
+            }, 50000);
         }
+
     })
     socket.on('response-reject-call-video', data => {
         if (data.callerID == userID) {
-            const text = data.reciever_name.trim() + " đã từ chối cuộc gọi của bạn";
-            alert(text);
+            text_reject_call.textContent = data.reciever_name.trim() + " đã từ chối cuộc gọi của bạn";
+            popup_reject_call.style.display = "flex";
+            call_back_btn.addEventListener('click', event => {
+                clearTimeout(timeout);
+                socket.emit('call-video', data);
+            })
+            const timeout = setTimeout(() => {
+                popup_reject_call.style.display = "none";
+            }, 3000);
         }
     })
+
+    socket.on('response-to-close-video-call', data => {
+        if (data == userID) {
+            popup.style.display = "none";
+            popup_reject_call.style.display = "none";
+            text_reject_call.textContent = "Cuộc gọi đã kết thúc !";
+            popup_reject_call.style.display = "flex";
+            setTimeout(() => {
+                window.location.reload();
+            }, 3000);
+        }
+    })
+
+    socket.on('send-notification-to-friend', data => {
+        if (data.friendid == userID) {
+            let message = '';
+            if (data.message.includes("http://res.cloudinary.com/dz1k6vz7m/image/upload/v1")) {
+                message = "Hình ảnh"
+            } else {
+                message = data.message.slice(0, 40);
+            }
+            message_notification.textContent = message;
+            sender.textContent = data.sender;
+            notification_popup.style.display = "block";
+            setTimeout(() => {
+                notification_popup.style.display = "none";
+            }, 4000)
+        }
+    })
+
     // is fired when user closes tab / browser or navigates to another page event
     window.addEventListener('beforeunload', function () {
         socket.disconnect(true);

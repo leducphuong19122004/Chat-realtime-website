@@ -12,39 +12,45 @@
 
 
 <body>
-    <div class="container">
-        <div class="row">
-            <div class="col-1">
-                <video class="screen-sharing" autoplay></video>
-                <video class="video-client" autoplay playsinline style="pointer-events: none;" id="peer-video"> </video>
-            </div>
-            <div class="controls">
-                <a class="minimize-window-btn" title="minimize window"><img class="img-minimize-window"
-                        src="https://img.icons8.com/ios-filled/256/minimize-window.png"></a>
-                <a class="screen-sharing-btn" href="#" id="link-screen-sharing" title="screen sharing"><img
-                        src="https://cdn-icons-png.flaticon.com/512/566/566068.png" class="img_screen_sharing"></a>
-                <a class="video-btn" title="camera"><img src="https://img.icons8.com/sf-black-filled/256/video-call.png"
-                        class="img_video"></a>
-                <a class="shutdown-btn" title="turn off"><img
-                        src="https://img.icons8.com/external-others-inmotus-design/256/external-Disconnect-phone-operations-and-functions-others-inmotus-design.png"></a>
+    <%- include('partials/popup_reject_call.ejs') %>
+        <div class="container">
+            <div class="row">
+                <div class="col-1">
+                    <video class="screen-sharing" autoplay></video>
+                    <video class="video-client" autoplay playsinline style="pointer-events: none;" id="peer-video">
+                    </video>
+                </div>
+                <div class="controls">
+                    <a class="minimize-window-btn" title="minimize window"><img class="img-minimize-window"
+                            src="https://img.icons8.com/ios-filled/256/minimize-window.png"></a>
+                    <a class="screen-sharing-btn" href="#" id="link-screen-sharing" title="screen sharing"><img
+                            src="https://cdn-icons-png.flaticon.com/512/566/566068.png" class="img_screen_sharing"></a>
+                    <a class="video-btn" title="camera"><img
+                            src="https://img.icons8.com/sf-black-filled/256/video-call.png" class="img_video"></a>
+                    <a class="shutdown-btn" title="turn off"><img
+                            src="https://img.icons8.com/external-others-inmotus-design/256/external-Disconnect-phone-operations-and-functions-others-inmotus-design.png"></a>
 
-                <a class="microphone-btn" title="microphone"><img
-                        src="https://img.icons8.com/ios-glyphs/256/microphone.png" class="img_microphone"></a>
-                <a class="speaker-btn" title="speaker"><img src="https://img.icons8.com/material-sharp/256/speaker.png"
-                        class="img_speaker"></a>
-            </div>
-            <div class="col-2">
-                <video autoplay playsinline muted id="video-peer-on-screen-sharing"></video>
-                <video class="video-host" autoplay playsinline muted></video>
+                    <a class="microphone-btn" title="microphone"><img
+                            src="https://img.icons8.com/ios-glyphs/256/microphone.png" class="img_microphone"></a>
+                    <a class="speaker-btn" title="speaker"><img
+                            src="https://img.icons8.com/material-sharp/256/speaker.png" class="img_speaker"></a>
+                </div>
+                <div class="col-2">
+                    <video autoplay playsinline muted id="video-peer-on-screen-sharing"></video>
+                    <video class="video-host" autoplay playsinline muted></video>
+                </div>
             </div>
         </div>
-    </div>
-    <!-- partial -->
+        <!-- partial -->
 
 </body>
 <style>
     body {
         font-family: 'Questrial', sans-serif;
+    }
+
+    .avatar {
+        width: 80px;
     }
 
     .col-1 {
@@ -132,6 +138,7 @@
     const roomID = '<%= roomID %>';
     let friendID = '<%= friendID %>';
     const callsound = document.querySelector('.callsound');
+    const container = document.querySelector('.container');
 
     const socket = io();
     socket.on('connect', () => {
@@ -139,28 +146,7 @@
 
     })
     socket.emit('join', { roomID: roomID });
-    socket.on('response-to-call-video', data => {
-        if (data.friendID == userID) {
-            const text = data.caller_name + " đang gọi cho bạn...";
-            if (confirm(text) == true) {
-                var url = "/videocall/" + friendid + "/" + roomID;
-                socket.emit('leave', { roomID: roomID });
-                window.location.href = url;
-            } else {
-                socket.emit('reject-call-video', data);
-            }
-            setTimeout(() => {
-                socket.emit('reject-call-video', data);
-            }, 60000);
-        }
-    })
-    socket.on('response-reject-call-video', data => {
-        if (data.callerID == userID) {
-            const text = data.reciever_name.trim() + " đã từ chối cuộc gọi của bạn";
-            alert(text);
-            shutdown_btn.click();
-        }
-    })
+
 
     const myVideo = document.querySelector('.video-host');
     const peerVideo = document.querySelector('.video-client');
@@ -225,6 +211,7 @@
         // Calls the remote peer specified by id and returns a media connection.
         const call_mine = myPeer.call(friendID, mediaStream); // call to friend who have friend id is friendID
         // call_mine is mediaConnection
+
         // this function will emitted when a remote peer adds a stream.
         // stream event calls on every track. So, if you stream contains two tracks, stream event should calls twice.
         call_mine.on('stream', userVideoStream => {
@@ -317,16 +304,22 @@
         }
         shutdown_btn.addEventListener('click', () => {
             call_mine.close(); // Closes the media connection.
-            socket.emit('close-video-call');
+            socket.emit('close-video-call', friendID);
             socket.emit('leave', { roomID: roomID });
             localStorage.setItem('screen_sharing', false);
             window.location.href = '/chat';
         });
 
-        socket.on('response-to-close-video-call', () => {
-            localStorage.setItem('screen_sharing', false);
-            socket.emit('leave', { roomID: roomID });
-            window.location.href = '/chat';
+        socket.on('response-to-close-video-call', data => {
+            if (data == userID) {
+                localStorage.setItem('screen_sharing', false);
+                socket.emit('leave', { roomID: roomID });
+                popup_reject_call.style.display = "flex";
+                setTimeout(() => {
+                    window.location.href = '/chat';
+                }, 3000)
+
+            }
         })
         // this function will turn off or on microphone when use click;
         microphone_btn.addEventListener('click', () => {
@@ -358,6 +351,34 @@
             } else {
                 img_speaker.src = "https://img.icons8.com/ios-filled/256/no-audio.png";
                 peerVideo.muted = true;
+            }
+        })
+        socket.on('response-reject-call-video', data => {
+            if (data.callerID == userID) {
+                text_reject_call.textContent = data.reciever_name.trim() + " đã từ chối cuộc gọi của bạn";
+                popup_reject_call.style.display = "flex";
+                call_back_btn.addEventListener('click', event => {
+                    clearTimeout(timeout);
+                    container.disabled = false;
+                    popup_reject_call.style.display = "none";
+                    socket.emit('call-video', data);
+                })
+                close_popup_reject_btn.addEventListener('click', event => {
+                    clearTimeout(timeout);
+                    popup_reject_call.style.display = "none";
+                    call_mine.close(); // Closes the media connection.
+                    socket.emit('leave', { roomID: roomID });
+                    localStorage.setItem('screen_sharing', false);
+                    window.location.href = '/chat';
+                })
+                const timeout = setTimeout(() => {
+                    popup_reject_call.style.display = "none";
+                    call_mine.close(); // Closes the media connection.
+                    socket.emit('leave', { roomID: roomID });
+                    localStorage.setItem('screen_sharing', false);
+                    window.location.href = '/chat';
+                }, 3000);
+
             }
         })
         call_mine.on('error', (error) => {

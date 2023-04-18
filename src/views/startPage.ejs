@@ -15,7 +15,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Questrial&display=swap" rel="stylesheet">
 </head>
 
-<body style="overflow: visible; background: url(&quot;style_for_login_page/img/bg-01.jpg&quot;) top / cover no-repeat;">
+<body style="background-color: cornflowerblue;">
     <section class="py-4 py-xl-5">
         <div class="container h-100">
             <div class="row h-100">
@@ -25,12 +25,11 @@
                         <h2 class="text-uppercase fw-bold mb-3">WELCOME TO CHAT BOX</h2>
                         <img class="img-fluid" id="icon" width="100" height="80"
                             src="styleForStartPage/img/icons8-speech-bubble-100.png">
-                        <a href="/checking-before-login"><button class="btn btn-primary fs-5 me-2 py-2 px-4"
-                                data-bss-hover-animate="pulse" type="button"
-                                style="font-family: 'Questrial', sans-serif;">Login</button></a>
-                        <a href="/signup-form"><button class="btn btn-primary fs-5 me-2 py-2 px-4"
-                                data-bss-hover-animate="pulse" type="button"
-                                style="font-family: 'Questrial', sans-serif;">Sign up</button></a>
+                        <a href="/checking-before-login"><button class="button-50" type="button"
+                                style="font-family: 'Questrial', sans-serif;  font-size: 20px;margin-right: 30px;">Login</button></a>
+                        <a href="/signup-form"><button class="button-50" type="button"
+                                style="font-family: 'Questrial', sans-serif;  font-size: 20px;margin-left: 30px;">Sign
+                                up</button></a>
                     </div>
                 </div>
             </div>
@@ -44,12 +43,14 @@
                 <li class="list-inline-item"><a class="link-light" href="#">Hosting</a></li>
             </ul>
             <ul class="list-inline">
-                <li class="list-inline-item me-4"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"
-                        fill="currentColor" viewBox="0 0 16 16" class="bi bi-facebook text-light">
-                        <path
-                            d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z">
-                        </path>
-                    </svg></li>
+                <a href="https://www.facebook.com/phuong.leduc.9400">
+                    <li class="list-inline-item me-4"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"
+                            fill="currentColor" viewBox="0 0 16 16" class="bi bi-facebook text-light">
+                            <path
+                                d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z">
+                            </path>
+                        </svg></li>
+                </a>
                 <li class="list-inline-item me-4"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em"
                         fill="currentColor" viewBox="0 0 16 16" class="bi bi-twitter text-light">
                         <path
@@ -68,6 +69,61 @@
     </footer>
     <script src="js/bootstrap.min.js"></script>
     <script src="styleForStartPage/js/bs-init.js"></script>
+    <style>
+        /* CSS */
+        .button-50 {
+
+            appearance: button;
+            background-color: #222222;
+            background-image: none;
+            border: 1px solid #000;
+            border-radius: 4px;
+            box-shadow: #fff 4px 4px 0 0, #000 4px 4px 0 1px;
+            box-sizing: border-box;
+            color: #fff;
+            cursor: pointer;
+            display: inline-block;
+            font-family: ITCAvantGardeStd-Bk, Arial, sans-serif;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 20px;
+            margin: 0 5px 10px 0;
+            overflow: visible;
+            padding: 12px 40px;
+            text-align: center;
+            text-transform: none;
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        .button-50:focus {
+            text-decoration: none;
+        }
+
+        .button-50:hover {
+            background-color: #000;
+            text-decoration: none;
+        }
+
+        .button-50:active {
+            box-shadow: rgba(0, 0, 0, .125) 0 3px 5px inset;
+            outline: 0;
+        }
+
+        .button-50:not([disabled]):active {
+            box-shadow: #fff 2px 2px 0 0, #000 2px 2px 0 1px;
+            transform: translate(2px, 2px);
+        }
+
+        @media (min-width: 768px) {
+            .button-50 {
+                padding: 12px 40px;
+            }
+        }
+    </style>
 
 </body>
 

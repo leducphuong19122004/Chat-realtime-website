@@ -15,6 +15,7 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth2';
 import { v2 as cloudinary } from 'cloudinary';
 import dotenv from 'dotenv';
 dotenv.config()
+import helmet from 'helmet';
 
 
 // connect redis
@@ -48,7 +49,8 @@ var accessLogStream = fs.createWriteStream('access.log', { flags: 'a' })
 // for the purpose of writing data to a file. This method may be a smarter option compared to methods like fs.writeFile when it comes to very large amounts of data.
 // setup the logger
 app.use(morgan('combined', { stream: accessLogStream }))
-
+// Helmet helps you secure your Express apps by setting various HTTP headers
+// app.use(helmet());
 // get data from client 
 app.use(express.json()); // for json
 app.use(express.urlencoded({ extended: false }));
@@ -190,10 +192,9 @@ io.on('connection', (socket) => {
     socket.on('reject-call-video', data => {
         io.emit('response-reject-call-video', data);
     })
-
-    socket.on('close-video-call', () => {
+    socket.on('close-video-call', (friendID) => {
         // Send a message to all sockets in the 'room_id' room except for the sender
-        socket.to(room_id).emit('response-to-close-video-call');
+        io.emit('response-to-close-video-call', friendID);
     })
     socket.on('disconnect', async () => {
         // get user id from disconnected socket
@@ -216,6 +217,10 @@ io.on('connection', (socket) => {
             }
         }, 10000)
     });
+
+    socket.on('send-notification-to-server', data => {
+        io.emit('send-notification-to-friend', data);
+    })
 })
 
 server.listen(process.env.PORT || 3000, hostname, () => console.log(`Server has started ${process.env.PORT}`));

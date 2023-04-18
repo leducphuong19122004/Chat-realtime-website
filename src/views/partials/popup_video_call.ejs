@@ -1,12 +1,15 @@
 <div class="bg-modal" style="display: none;">
   <div class="modal-content-popup">
-    <img class="close-btn" src="https://cdn-icons-png.flaticon.com/512/2976/2976286.png" alt="">
+    <a class="close-popup-btn"><img class="close-btn" src="https://cdn-icons-png.flaticon.com/512/2976/2976286.png"
+        alt=""></a>
     <img src="https://i.pinimg.com/originals/8b/2a/1e/8b2a1e1284b75af8cb0d3489ce828fbd.jpg" class="avatar-popup" alt="">
-    <div class="text">Le Duc Phuong đang gọi cho bạn</div>
+    <div class="text"></div>
     <div class="child-text">Chấp nhận để đến cuộc gọi...</div>
     <div class="call-btn">
-      <img src="https://cdn-icons-png.flaticon.com/512/3616/3616215.png" alt="" class="call-off-btn">
-      <img src="https://cdn-icons-png.flaticon.com/512/5585/5585856.png" alt="" class="call-on-btn">
+      <a class="call-off"> <img src="https://cdn-icons-png.flaticon.com/512/3616/3616215.png" alt=""
+          class="call-off-btn"></a>
+      <a class="call-on"> <img src="https://cdn-icons-png.flaticon.com/512/5585/5585856.png" alt=""
+          class="call-on-btn"></a>
     </div>
 
   </div>
@@ -119,3 +122,13 @@
     }
   }
 </style>
+<script>
+  const popup = document.querySelector('.bg-modal');
+  const call_off_btn = document.querySelector('.call-off');
+  const call_on_btn = document.querySelector('.call-on');
+  const text = document.querySelector('.text');
+  const close_popup_btn = document.querySelector('.close-popup-btn');
+  close_popup_btn.addEventListener('click', event => {
+    popup.style.display = "none";
+  })
+</script>

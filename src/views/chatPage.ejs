@@ -23,37 +23,72 @@
 </head>
 
 <body>
-    <%- include('partials/popup_video_call.ejs') %>
-        <%- include('partials/sidebar.ejs') %>
-            <div class="container">
-                <div class="container-1">
-                    <div class="container-2">
-                        <div class="card chat-app">
-                            <div id="plist" class="people-list">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Search...">
-                                </div>
-                                <ul class="list-unstyled chat-list mt-2 mb-0" id="list">
-                                    <% for(let i=0; i < friend.length; i++) { %>
-                                        <li class="clearfix" onclick="joinChat(this,  '<%= friend[i].userID %>')">
-                                            <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar">
-                                            <div class="about">
-                                                <div class="name">
-                                                    <%= friend[i].username %>
-                                                </div>
-                                                <% if(friend[i].status=="on" ) { %>
-                                                    <div class="status"> <i class="fa fa-circle online"></i>
-                                                        <%= friend[i].status %>line
-                                                    </div>
-                                                    <% } else { %>
-                                                        <div class="status"> <i class="fa fa-circle offline"></i>
-                                                            <%= friend[i].status %>line
+    <%- include('partials/popup_reject_call.ejs') %>
+        <%- include('partials/popup_video_call.ejs') %>
+            <%- include('partials/sidebar.ejs') %>
+                <%- include('partials/popup_notification.ejs') %>
+                    <div class="container">
+                        <div class="container-1">
+                            <div class="container-2">
+                                <div class="card chat-app">
+                                    <div id="plist" class="people-list">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" placeholder="Search...">
+                                        </div>
+                                        <ul class="list-unstyled chat-list mt-2 mb-0" id="list">
+                                            <% for(let i=0; i < friend.length; i++) { %>
+                                                <li class="clearfix"
+                                                    onclick="joinChat(this,  '<%= friend[i].userID %>')"
+                                                    id="user-inbox">
+                                                    <img src="https://bootdey.com/img/Content/avatar/avatar1.png"
+                                                        alt="avatar">
+                                                    <div class="about">
+                                                        <div class="name">
+                                                            <%= friend[i].username %>
                                                         </div>
-                                                        <% } %>
-                                            </div>
-                                        </li>
-                                        <% } %>
-                                            <!-- <li class="clearfix active">
+                                                        <% if(friend[i].status=="on" ) { %>
+                                                            <div class="status"> <i class="fa fa-circle online"></i>
+                                                                <%= friend[i].status %>line
+                                                            </div>
+                                                            <% } else { %>
+                                                                <div class="status"> <i
+                                                                        class="fa fa-circle offline"></i>
+                                                                    <%= friend[i].status %>line
+                                                                </div>
+                                                                <% } %>
+                                                    </div>
+                                                    <a href="#" onclick="displayDropdown(this, '<%= i %>')"
+                                                        class="three-dots" data-toggle="dropdown" data-display="static">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                            stroke-width="2" stroke-linecap="round"
+                                                            stroke-linejoin="round"
+                                                            class="feather feather-more-horizontal align-middle"
+                                                            id="three-dots">
+                                                            <circle cx="12" cy="12" r="1"></circle>
+                                                            <circle cx="19" cy="12" r="1"></circle>
+                                                            <circle cx="5" cy="12" r="1"></circle>
+                                                        </svg>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                            stroke-width="2" stroke-linecap="round"
+                                                            stroke-linejoin="round"
+                                                            class="feather feather-more-horizontal align-middle"
+                                                            id="three-dots-2">
+                                                            <circle cx="12" cy="12" r="1"></circle>
+                                                            <circle cx="19" cy="12" r="1"></circle>
+                                                            <circle cx="5" cy="12" r="1"></circle>
+                                                        </svg>
+                                                    </a>
+                                                </li>
+                                                <div class="dropdown-setting">
+                                                    <a href="" class="item-1">Action</a>
+                                                    <a href="" class="item-2">Another action</a>
+                                                    <a href="" class="item-3">Something esle here</a>
+                                                </div>
+                                                <% } %>
+
+                                                    <!-- <li class="clearfix active">
                                     <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar">
                                     <div class="about">
                                         <div class="name">Aiden Chavez</div>
@@ -90,36 +125,38 @@
                                         </div>
                                     </div>
                                 </li> -->
-                                </ul>
-                            </div>
-                            <div class="chat">
-                                <div class="chat-header clearfix">
-                                    <div class="row">
-                                        <div class="col-lg-6">
-                                            <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
-                                                <img src="https://bootdey.com/img/Content/avatar/avatar2.png"
-                                                    alt="avatar">
-                                            </a>
-                                            <div class="chat-about">
-                                                <h6 class="m-b-0" id="nameFriendChatting">No friend selected</h6>
+                                        </ul>
+                                    </div>
+                                    <div class="chat">
+                                        <div class="chat-header clearfix">
+                                            <div class="row">
+                                                <div class="col-lg-6">
+                                                    <a href="javascript:void(0);" data-toggle="modal"
+                                                        data-target="#view_info">
+                                                        <img src="https://bootdey.com/img/Content/avatar/avatar2.png"
+                                                            alt="avatar">
+                                                    </a>
+                                                    <div class="chat-about">
+                                                        <h6 class="m-b-0" id="nameFriendChatting"></h6>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 hidden-sm text-right" style="text-align: right;">
+                                                    <a onclick="gotoVideoCallPage(`${friendid}`); return false;"
+                                                        class="btn btn-outline-secondary"><i
+                                                            class="fa fa-camera"></i></a>
+                                                    <a class="btn btn-outline-primary" onclick="clickInputFunction()"><i
+                                                            class="fa fa-image"></i></a>
+                                                    <a href="javascript:void(0);" class="btn btn-outline-info"><i
+                                                            class="fa fa-cogs"></i></a>
+                                                    <a href="javascript:void(0);" class="btn btn-outline-warning"><i
+                                                            class="fa fa-question"></i></a>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="col-lg-6 hidden-sm text-right" style="text-align: right;">
-                                            <a onclick="gotoVideoCallPage(`${friendid}`); return false;"
-                                                class="btn btn-outline-secondary"><i class="fa fa-camera"></i></a>
-                                            <a class="btn btn-outline-primary" onclick="clickInputFunction()"><i
-                                                    class="fa fa-image"></i></a>
-                                            <a href="javascript:void(0);" class="btn btn-outline-info"><i
-                                                    class="fa fa-cogs"></i></a>
-                                            <a href="javascript:void(0);" class="btn btn-outline-warning"><i
-                                                    class="fa fa-question"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <div class="chat-history">
-                                    <ul class="m-b-0" id="text-message">
-                                        <!-- <li class="clearfix">
+                                        <div class="chat-history">
+                                            <ul class="m-b-0" id="text-message">
+                                                <!-- <li class="clearfix">
                                             <div class="message-data text-right">
                                                 <span class="message-data-time">10:10 AM, Today</span>
                                                 <img src="https://bootdey.com/img/Content/avatar/avatar7.png"
@@ -145,594 +182,735 @@
                                                 to show you.</div>
                                         </li> -->
 
-                                    </ul>
-                                </div>
-                                <form id="form-message">
-                                    <div class="chat-message clearfix ">
-                                        <div class="input-group mb-0">
-                                            <input id="message" type="text" class="form-control"
-                                                placeholder="Enter text here...">
-
-                                            <div class="input-group-prepend">
-                                                <button style="border: none; padding: 0px 0px 0px 0px;"><span
-                                                        class="input-group-text"
-                                                        style="padding-top : 8px; padding-bottom : 8px"><i
-                                                            class="fa fa-send"></i></span></button>
-                                            </div>
-
+                                            </ul>
                                         </div>
-                                    </div>
-                                </form>
+                                        <form id="form-message">
+                                            <div class="chat-message clearfix ">
+                                                <div class="input-group mb-0">
+                                                    <input id="message" type="text" class="form-control"
+                                                        placeholder="Enter text here...">
 
-                                <form enctype="multipart/form-data" method="post">
-                                    <input type="file" name="image_message" id="image_message"
-                                        accept=".png, .jpg, .jpeg" multiple hidden />
-                                    <input name="room_id" type="text" id="roomid_img" hidden />
-                                </form>
+                                                    <div class="input-group-prepend">
+                                                        <button style="border: none; padding: 0px 0px 0px 0px;"><span
+                                                                class="input-group-text"
+                                                                style="padding-top : 8px; padding-bottom : 8px"><i
+                                                                    class="fa fa-send"></i></span></button>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </form>
+
+                                        <form enctype="multipart/form-data" method="post">
+                                            <input type="file" name="image_message" id="image_message"
+                                                accept=".png, .jpg, .jpeg" multiple hidden />
+                                            <input name="room_id" type="text" id="roomid_img" hidden />
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <style type="text/css">
-                .bx-log-out:before {
-                    content: "\eb4f";
-                    font-size: 1.25rem;
-                }
+                    <style type="text/css">
+                        .bx-log-out:before {
+                            content: "\eb4f";
+                            font-size: 1.25rem;
+                        }
 
-                body {
-                    background-color: #f4f7f6;
-                    font-family: 'Questrial', sans-serif;
-                }
+                        body {
+                            background-color: #f4f7f6;
+                            font-family: 'Questrial', sans-serif;
+                            overflow: hidden;
+                        }
 
-                .container {
-                    margin-top: 0px !important;
-                    margin-left: 68px;
-                    margin-right: 0px !important;
-                    padding-right: 0px !important;
-                    padding-left: 0px !important;
-                    width: 100%;
-                    height: 100%;
-                }
+                        #three-dots,
+                        #three-dots-2 {
+                            -ms-transform: rotate(90deg);
+                            transform: rotate(90deg);
+                            position: absolute;
+                            right: 0;
+                            display: none;
+                        }
 
-                .container-1,
-                .container-2 {
-                    width: 100%;
-                    height: 100vh;
-                    min-height: 100%;
-                }
+                        #list {
+                            position: relative;
+                            z-index: 1;
+                        }
 
-                .card {
-                    background: #fff;
-                    transition: .5s;
-                    border: 0;
-                    border-radius: .55rem;
-                    position: relative;
-                    width: calc(100vw - 68px);
-                    height: 100vh;
-                    min-height: 100%;
-                }
+                        #user-inbox {
+                            width: 260px;
+                        }
 
-                .chat {
-                    height: 100vh;
-                    min-height: 100%;
-                }
+                        .dropdown-setting {
+                            background-color: #f4f7f6;
+                            display: none;
+                            position: absolute;
+                            right: 0;
+                            border: solid #D3D3D3 1px;
+                            border-radius: 10px;
+                            width: 177.625px;
+                            height: 104px;
+                            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1), 0 6px 20px 0 rgba(0, 0, 0, 0.1);
+                            padding: 8px 0px 8px 0px;
+                            z-index: 9998;
+                        }
 
-                .chat-history {
-                    height: calc(100% - 71.86px - 74px);
-                    overflow: auto;
-                }
+                        .item-1,
+                        .item-2,
+                        .item-3 {
+                            cursor: pointer;
+                            width: 145.625px !important;
+                            font-size: 15px;
+                            padding: 4px 16px 4px 16px !important;
+                            display: block;
+                            width: 100% !important;
+                            clear: both;
+                            font-weight: 400;
+                            color: var(--bs-dropdown-link-color);
+                            text-align: inherit;
+                            text-decoration: none;
+                            white-space: nowrap;
+                            background-color: transparent;
+                            border: 0;
+                        }
 
-                .form-control {
-                    border-radius: 30px;
-                    border: 1px solid #ced4da;
-                }
+                        .item-1:hover,
+                        .item-2:hover,
+                        .item-3:hover {
+                            background-color: #E8E8E8;
+                        }
 
-                .chat-app .people-list {
-                    width: 280px;
-                    position: absolute;
-                    left: 0;
-                    top: 0;
-                    padding: 20px;
-                    z-index: 7
-                }
+                        /* if element B is child element A so set like this, if not child ( is sibling ) so set #user-inbox:hover+#three-dots  */
+                        #user-inbox:hover #three-dots {
+                            display: inline-block;
+                        }
 
-                .chat-app .chat {
-                    margin-left: 280px;
-                    border-left: 1px solid #eaeaea
-                }
+                        .container {
+                            margin-top: 0px !important;
+                            margin-left: 68px;
+                            margin-right: 0px !important;
+                            padding-right: 0px !important;
+                            padding-left: 0px !important;
+                            width: 100%;
+                            height: 100%;
+                        }
 
-                .people-list {
-                    -moz-transition: .5s;
-                    -o-transition: .5s;
-                    -webkit-transition: .5s;
-                    transition: .5s
-                }
+                        .container-1,
+                        .container-2 {
+                            width: 100%;
+                            height: 100vh;
+                            min-height: 100%;
+                        }
 
-                .people-list .chat-list li {
-                    padding: 10px 15px;
-                    list-style: none;
-                    border-radius: 3px
-                }
+                        .card {
+                            background: #fff;
+                            transition: .5s;
+                            border: 0;
+                            border-radius: .55rem;
+                            position: relative;
+                            width: calc(100vw - 68px);
+                            height: 100vh;
+                            min-height: 100%;
+                        }
 
-                .people-list .chat-list li:hover {
-                    background: #efefef;
-                    cursor: pointer
-                }
+                        .chat {
+                            height: 100vh;
+                            min-height: 100%;
+                        }
 
-                .people-list .chat-list li.active {
-                    background: #efefef
-                }
+                        .chat-history {
+                            height: calc(100% - 71.86px - 74px);
+                            overflow: auto;
+                        }
 
-                .people-list .chat-list li .name {
-                    font-size: 15px
-                }
+                        .form-control {
+                            border-radius: 30px;
+                            border: 1px solid #ced4da;
+                        }
 
-                .people-list .chat-list img {
-                    width: 45px;
-                    border-radius: 50%
-                }
+                        .chat-app .people-list {
+                            width: 300px;
+                            position: absolute;
+                            left: 0;
+                            top: 0;
+                            padding: 20px;
+                            z-index: 7
+                        }
 
-                .people-list img {
-                    float: left;
-                    border-radius: 50%
-                }
+                        .chat-app .chat {
+                            margin-left: 300px;
+                            border-left: 1px solid #eaeaea
+                        }
 
-                .people-list .about {
-                    float: left;
-                    padding-left: 8px
-                }
+                        .people-list {
+                            -moz-transition: .5s;
+                            -o-transition: .5s;
+                            -webkit-transition: .5s;
+                            transition: .5s
+                        }
 
-                .people-list .status {
-                    color: #999;
-                    font-size: 13px
-                }
+                        .people-list .chat-list li {
+                            padding: 10px 15px;
+                            list-style: none;
+                            border-radius: 3px
+                        }
 
-                .chat .chat-header {
-                    padding: 15px 20px;
-                    border-bottom: 2px solid #f4f7f6
-                }
+                        .people-list .chat-list li:hover {
+                            background: #efefef;
+                            cursor: pointer
+                        }
 
-                .chat .chat-header img {
-                    float: left;
-                    border-radius: 40px;
-                    width: 40px
-                }
+                        .people-list .chat-list li.active {
+                            background: #efefef
+                        }
 
-                .chat .chat-header .chat-about {
-                    float: left;
-                    padding-left: 10px
-                }
+                        .people-list .chat-list li .name {
+                            font-size: 15px
+                        }
 
-                .chat .chat-history {
-                    padding: 20px;
-                    border-bottom: 2px solid #fff
-                }
+                        .people-list .chat-list img {
+                            width: 45px;
+                            border-radius: 50%
+                        }
 
-                .chat .chat-history ul {
-                    padding: 0
-                }
+                        .people-list img {
+                            float: left;
+                            border-radius: 50%
+                        }
 
-                .chat .chat-history ul li {
-                    list-style: none;
-                    margin-bottom: 30px
-                }
+                        .people-list .about {
+                            float: left;
+                            padding-left: 8px
+                        }
 
-                .chat .chat-history ul li:last-child {
-                    margin-bottom: 0px
-                }
+                        .people-list .status {
+                            color: #999;
+                            font-size: 13px
+                        }
 
-                .chat .chat-history .message-data {
-                    margin-bottom: 15px
-                }
+                        .chat .chat-header {
+                            padding: 15px 20px;
+                            border-bottom: 2px solid #f4f7f6
+                        }
 
-                .chat .chat-history .message-data img {
-                    border-radius: 40px;
-                    width: 40px
-                }
+                        .chat .chat-header img {
+                            float: left;
+                            border-radius: 40px;
+                            width: 40px
+                        }
 
-                .chat .chat-history .message-data-time {
-                    color: #434651;
-                    padding-left: 6px
-                }
+                        .chat .chat-header .chat-about {
+                            float: left;
+                            padding-left: 10px
+                        }
 
-                .chat .chat-history .message {
-                    color: #444;
-                    padding: 18px 20px;
-                    line-height: 26px;
-                    font-size: 16px;
-                    border-radius: 7px;
-                    display: inline-block;
-                    position: relative
-                }
+                        .chat .chat-history {
+                            padding: 20px;
+                            border-bottom: 2px solid #fff
+                        }
 
-                .chat .chat-history .message:after {
-                    bottom: 100%;
-                    left: 7%;
-                    border: solid transparent;
-                    content: " ";
-                    height: 0;
-                    width: 0;
-                    position: absolute;
-                    pointer-events: none;
-                    border-bottom-color: #fff;
-                    border-width: 10px;
-                    margin-left: -10px
-                }
+                        .chat .chat-history ul {
+                            padding: 0
+                        }
 
-                .chat .chat-history .my-message {
-                    background: #efefef
-                }
+                        .chat .chat-history ul li {
+                            list-style: none;
+                            margin-bottom: 30px
+                        }
 
-                .chat .chat-history .my-message:after {
-                    bottom: 100%;
-                    left: 30px;
-                    border: solid transparent;
-                    content: " ";
-                    height: 0;
-                    width: 0;
-                    position: absolute;
-                    pointer-events: none;
-                    border-bottom-color: #efefef;
-                    border-width: 10px;
-                    margin-left: -10px
-                }
+                        .chat .chat-history ul li:last-child {
+                            margin-bottom: 0px
+                        }
 
-                .chat .chat-history .other-message {
-                    background: #0dcaf0;
-                    text-align: right
-                }
+                        .chat .chat-history .message-data {
+                            margin-bottom: 15px
+                        }
 
-                .chat .chat-history .other-message:after {
-                    border-bottom-color: #e8f1f3;
-                    left: 93%
-                }
+                        .chat .chat-history .message-data img {
+                            border-radius: 40px;
+                            width: 40px
+                        }
 
-                .chat .chat-message {
-                    padding: 20px
-                }
+                        .chat .chat-history .message-data-time {
+                            color: #434651;
+                            padding-left: 6px
+                        }
 
-                .online,
-                .offline,
-                .me {
-                    margin-right: 2px;
-                    font-size: 8px;
-                    vertical-align: middle
-                }
+                        .chat .chat-history .message {
+                            color: #444;
+                            padding: 18px 20px;
+                            line-height: 26px;
+                            font-size: 16px;
+                            border-radius: 7px;
+                            display: inline-block;
+                            position: relative
+                        }
 
-                .online {
-                    color: #86c541
-                }
+                        .chat .chat-history .message:after {
+                            bottom: 100%;
+                            left: 7%;
+                            border: solid transparent;
+                            content: " ";
+                            height: 0;
+                            width: 0;
+                            position: absolute;
+                            pointer-events: none;
+                            border-bottom-color: #fff;
+                            border-width: 10px;
+                            margin-left: -10px
+                        }
 
-                .offline {
-                    color: #e47297
-                }
+                        .chat .chat-history .my-message {
+                            background: #efefef
+                        }
 
-                .me {
-                    color: #1d8ecd
-                }
+                        .chat .chat-history .my-message:after {
+                            bottom: 100%;
+                            left: 30px;
+                            border: solid transparent;
+                            content: " ";
+                            height: 0;
+                            width: 0;
+                            position: absolute;
+                            pointer-events: none;
+                            border-bottom-color: #efefef;
+                            border-width: 10px;
+                            margin-left: -10px
+                        }
 
-                .float-right {
-                    float: right
-                }
+                        .chat .chat-history .other-message {
+                            background: #0dcaf0;
+                            text-align: right
+                        }
 
-                .clearfix:after {
-                    visibility: hidden;
-                    display: block;
-                    font-size: 0;
-                    content: " ";
-                    clear: both;
-                    height: 0
-                }
+                        .chat .chat-history .other-message:after {
+                            border-bottom-color: #e8f1f3;
+                            left: 93%
+                        }
 
-                #imageItem {
-                    border-radius: 20px;
-                    max-width: 100%;
-                    max-height: 200px;
-                    cursor: pointer;
-                }
+                        .chat .chat-message {
+                            padding: 20px
+                        }
 
-                .chat-message {
-                    bottom: 0;
-                    position: absolute;
-                    width: -webkit-fill-available;
-                }
-            </style>
-            <script src="client-dist/socket.io.js"></script>
-            <script type="text/javascript">
-                const callsound = document.querySelector('.callsound');
-                const active = document.querySelector("#chat");
-                active.setAttribute('class', 'nav_link active');
+                        .online,
+                        .offline,
+                        .me {
+                            margin-right: 2px;
+                            font-size: 8px;
+                            vertical-align: middle
+                        }
 
-                const socket = io();
-                let roomID = '';
-                const userID = '<%= userID %>';
-                const friend = JSON.parse('<%- JSON.stringify(friend) %>');
-                let friendid = ' ';
-                const username = '<%= username %>'
+                        .online {
+                            color: #86c541
+                        }
 
-                // This event is fired by the Socket instance upon connection and reconnection.
-                socket.on('connect', () => {
-                    socket.emit('user-connected', userID);
+                        .offline {
+                            color: #e47297
+                        }
 
-                })
-                socket.on('response-to-call-video', data => {
-                    if (data.friendID == userID) {
-                        const text = data.caller_name + " đang gọi cho bạn...";
-                        if (confirm(text) == true) {
+                        .me {
+                            color: #1d8ecd
+                        }
+
+                        .float-right {
+                            float: right
+                        }
+
+                        .clearfix:after {
+                            visibility: hidden;
+                            display: block;
+                            font-size: 0;
+                            content: " ";
+                            clear: both;
+                            height: 0
+                        }
+
+                        #imageItem {
+                            border-radius: 20px;
+                            max-width: 100%;
+                            max-height: 200px;
+                            cursor: pointer;
+                        }
+
+                        .chat-message {
+                            bottom: 0;
+                            position: absolute;
+                            width: -webkit-fill-available;
+                        }
+                    </style>
+                    <script src="client-dist/socket.io.js"></script>
+                    <script type="text/javascript">
+                        const socket = io();
+                        let roomID = '';
+                        const userID = '<%= userID %>';
+                        const friend = JSON.parse('<%- JSON.stringify(friend) %>');
+                        let friendid = '<%= friend[0].userID %>';
+                        const username = '<%= username %>';
+
+                        const chat_history = document.querySelector('.chat-history');
+                        const chatForm = document.querySelector('#form-message');
+                        const chatMes = document.querySelector('#message');
+                        const nameFriendChatting = document.querySelector('#nameFriendChatting');
+                        const list = document.getElementById("list").querySelectorAll(".clearfix");
+                        const text_message = document.getElementById("text-message");
+                        const image_message = document.getElementById("image_message");
+                        const status = document.getElementById("list").querySelectorAll(".status");
+
+                        const dropdown_menu = document.querySelectorAll('#three-dots');
+                        const dropdown_menu_2 = document.querySelectorAll('#three-dots-2');
+                        const option_menu = document.querySelectorAll('.dropdown-setting');
+                        function displayDropdown(e, i) {
+                            for (let count = 0; count < option_menu.length; count++) {
+                                option_menu[count].style.display = "none";
+                                dropdown_menu_2[count].style.display = "none";
+                            }
+                            dropdown_menu_2[i].style.display = "inline-block";
+                            option_menu[i].style.display = "block";
+                        }
+                        window.onclick = (event) => {
+                            if (!event.target.matches('.three-dots')) {
+                                for (let count = 0; count < option_menu.length; count++) {
+                                    option_menu[count].style.display = "none";
+                                    dropdown_menu_2[count].style.display = "none";
+                                }
+                            }
+
+                        }
+                        const callsound = document.querySelector('.callsound');
+                        const active = document.querySelector("#chat");
+                        active.setAttribute('class', 'nav_link active');
+                        // This event is fired by the Socket instance upon connection and reconnection.
+                        socket.on('connect', () => {
+                            socket.emit('user-connected', userID);
+
+                        })
+
+                        socket.on('response-to-call-video', data => {
+                            if (data.friendID == userID) {
+                                popup.style.display = "flex";
+                                text.textContent = data.caller_name + " đang gọi cho bạn...";
+                                call_off_btn.addEventListener('click', event => {
+                                    clearTimeout(timeout);
+                                    popup.style.display = "none";
+                                    socket.emit('reject-call-video', data);
+                                });
+                                call_on_btn.addEventListener('click', event => {
+                                    clearTimeout(timeout);
+                                    var url = "/videocall/" + friendid + "/" + roomID;
+                                    socket.emit('leave', { roomID: roomID });
+                                    window.location.href = url;
+                                })
+                                const timeout = setTimeout(() => {
+                                    popup.style.display = "none";
+                                    socket.emit('reject-call-video', data);
+                                }, 50000);
+                            }
+
+                        })
+                        socket.on('response-reject-call-video', data => {
+                            if (data.callerID == userID) {
+                                text_reject_call.textContent = data.reciever_name.trim() + " đã từ chối cuộc gọi của bạn";
+                                popup_reject_call.style.display = "flex";
+                                call_back_btn.addEventListener('click', event => {
+                                    clearTimeout(timeout);
+                                    socket.emit('call-video', data);
+                                })
+                                const timeout = setTimeout(() => {
+                                    popup_reject_call.style.display = "none";
+                                }, 3000);
+                            }
+                        })
+
+                        socket.on('response-to-close-video-call', data => {
+                            if (data == userID) {
+                                popup.style.display = "none";
+                                popup_reject_call.style.display = "flex";
+                                setTimeout(() => {
+                                    window.location.reload();
+                                }, 3000)
+                            }
+                        })
+
+
+                        const user_inbox = document.querySelectorAll('#user-inbox');
+                        user_inbox[0].click();
+
+                        function clickInputFunction() {
+                            document.getElementById("roomid_img").value = roomID;
+                            image_message.click();
+                        }
+                        image_message.addEventListener('change', (event) => {
+                            let formData = new FormData();
+
+                            formData.append('room_id', roomID);
+
+                            const promises = [];
+
+                            for (let i = 0; i < event.target.files.length; i++) {
+                                const messageItem1 = document.createElement('li');
+                                messageItem1.setAttribute('class', 'clearfix');
+                                const messageItem2 = document.createElement('div');
+                                messageItem2.setAttribute('class', 'message float-right');
+                                const imageItem = document.createElement('img');
+                                imageItem.setAttribute('id', 'imageItem');
+
+                                textMessage.appendChild(messageItem1);
+                                messageItem1.appendChild(messageItem2);
+                                messageItem2.appendChild(imageItem);
+
+                                imageItem.src = URL.createObjectURL(event.target.files[i]);
+
+                                const promise = fetch(imageItem.src)
+                                    .then(Response => Response.blob())
+                                    .then(blob => {
+                                        formData.append('file', blob);
+                                    });
+                                promises.push(promise);
+                            }
+
+                            //The Promise.all() static method takes an iterable of promises as input and returns a single Promise.
+                            //This returned promise fulfills when all of the input's promises fulfill (including when an empty iterable
+                            //is passed), with an array of the fulfillment values. It rejects when any of the input's promises rejects
+                            //with this first rejection reason
+
+                            Promise.all(promises).then(() => {
+                                fetch('/chat/image-message', {
+                                    method: 'POST',
+                                    body: formData
+                                })
+                                    .then(Response => Response.json())
+                                    .then(result => {
+                                        const message1 = result.message;
+                                        for (let i = 0; i < message1.length; i++) {
+                                            const message2 = {
+                                                userID: message1[i][0],
+                                                message: message1[i][1]
+                                            }
+                                            socket.emit('chat-message', message2);
+                                        }
+
+                                    })
+                            });
+
+                        })
+
+                        function joinChat(e, friendId) {
+                            friendid = friendId;
+                            for (let i = 0; i < list.length; i++) {
+                                list[i].classList.remove("active");
+                            }
+
+                            e.setAttribute('class', 'clearfix active');
+                            nameFriendChatting.textContent = e.querySelector(".name").textContent;
+
+                            socket.emit('checkID', { userID, friendId });
+
+                            socket.on('roomID', data => { // data have roomID and userID , friendId
+                                roomID = data.room_id;
+                                socket.emit('join', { roomID, userID });
+
+                                fetch(`/chat/${roomID}`, {
+                                    method: 'GET',
+                                    headers: {
+                                        "Content-Type": "application/json"
+                                    }
+                                })
+                                    .then(Response => Response.json())
+                                    .then(data => {
+                                        let message = JSON.parse(data.message);
+                                        // remove  message of previous people
+                                        while (text_message.firstChild) {
+                                            text_message.removeChild(text_message.firstChild);
+                                        }
+
+                                        for (let i = 0; i < message.length; i++) {
+                                            if (message[i][0] == userID) {
+                                                if (message[i][1].includes("http://res.cloudinary.com/dz1k6vz7m/image/upload/v1")) {
+                                                    const messageItem1 = document.createElement('li');
+                                                    messageItem1.setAttribute('class', 'clearfix');
+                                                    const messageItem2 = document.createElement('div');
+                                                    messageItem2.setAttribute('class', 'message float-right');
+                                                    const imageItem = document.createElement('img');
+                                                    imageItem.setAttribute('id', 'imageItem');
+
+                                                    textMessage.appendChild(messageItem1);
+                                                    messageItem1.appendChild(messageItem2);
+                                                    messageItem2.appendChild(imageItem);
+
+                                                    imageItem.src = message[i][1];
+                                                } else {
+                                                    const messageItem1 = document.createElement('li');
+                                                    messageItem1.setAttribute('class', 'clearfix');
+
+                                                    const messageItem2 = document.createElement('div');
+                                                    messageItem2.setAttribute('class', 'message other-message float-right');
+                                                    messageItem2.textContent = message[i][1];
+
+                                                    textMessage.appendChild(messageItem1);
+                                                    messageItem1.appendChild(messageItem2);
+                                                }
+
+                                            } else {
+                                                if (message[i][1].includes("http://res.cloudinary.com/dz1k6vz7m/image/upload/v1")) {
+                                                    const messageItem1 = document.createElement('li');
+                                                    messageItem1.setAttribute('class', 'clearfix');
+
+                                                    const imageItem = document.createElement('img');
+                                                    imageItem.setAttribute('id', 'imageItem');
+                                                    imageItem.setAttribute('class', 'my-message')
+
+                                                    textMessage.appendChild(messageItem1);
+                                                    messageItem1.appendChild(imageItem);
+
+                                                    imageItem.src = message[i][1];
+                                                } else {
+                                                    const messageItem1 = document.createElement('li');
+                                                    messageItem1.setAttribute('class', 'clearfix');
+
+                                                    const messageItem2 = document.createElement('div');
+                                                    messageItem2.setAttribute('class', 'message my-message');
+                                                    messageItem2.textContent = message[i][1];
+
+                                                    textMessage.appendChild(messageItem1);
+                                                    messageItem1.appendChild(messageItem2);
+                                                }
+
+                                            }
+                                        }
+                                    })
+                                    .then(() => {
+                                        // scroll down to bottom of chat 
+                                        chat_history.scrollTop = chat_history.scrollHeight - chat_history.clientHeight;
+                                    })
+                            })
+                        }
+
+                        chatForm.addEventListener('submit', (e) => {
+                            e.preventDefault(); // this will prevent action submiting the form when you click submit button 
+                            var message = chatMes.value;
+                            socket.emit('send-notification-to-server', { senderID: userID, friendid: friendid, message: message, sender: username });
+                            socket.emit('chat-message', { userID: userID, friendid: friendid, message: message });
+                            chatMes.value = '';
+
+                        })
+
+                        const textMessage = document.querySelector('#text-message');
+                        socket.on('chat-reply', (data) => {
+                            if (data.userID == userID) {
+
+                                if (data.message.includes("http://res.cloudinary.com/dz1k6vz7m/image/upload/v1")) {
+                                    const messageItem1 = document.createElement('li');
+                                    messageItem1.setAttribute('class', 'clearfix');
+                                    const messageItem2 = document.createElement('div');
+                                    messageItem2.setAttribute('class', 'message float-right');
+                                    const imageItem = document.createElement('img');
+                                    imageItem.setAttribute('id', 'imageItem');
+
+                                    textMessage.appendChild(messageItem1);
+                                    messageItem1.appendChild(messageItem2);
+                                    messageItem2.appendChild(imageItem);
+
+                                    imageItem.src = data.message;
+
+                                    chat_history.scrollTop = chat_history.scrollHeight - chat_history.clientHeight;
+                                } else {
+                                    const messageItem1 = document.createElement('li');
+                                    messageItem1.setAttribute('class', 'clearfix');
+
+                                    const messageItem2 = document.createElement('div');
+                                    messageItem2.setAttribute('class', 'message other-message float-right');
+                                    messageItem2.textContent = data.message;
+
+                                    textMessage.appendChild(messageItem1);
+                                    messageItem1.appendChild(messageItem2);
+
+                                    chat_history.scrollTop = chat_history.scrollHeight - chat_history.clientHeight;
+                                }
+                            }
+                            else {
+                                if (data.message.includes("http://res.cloudinary.com/dz1k6vz7m/image/upload/v1")) {
+                                    const messageItem1 = document.createElement('li');
+                                    messageItem1.setAttribute('class', 'clearfix');
+
+                                    const imageItem = document.createElement('img');
+                                    imageItem.setAttribute('id', 'imageItem');
+                                    imageItem.setAttribute('class', 'my-message')
+
+                                    textMessage.appendChild(messageItem1);
+                                    messageItem1.appendChild(imageItem);
+
+                                    imageItem.src = data.message;
+
+                                    chat_history.scrollTop = chat_history.scrollHeight - chat_history.clientHeight;
+                                } else {
+                                    const messageItem1 = document.createElement('li');
+                                    messageItem1.setAttribute('class', 'clearfix');
+
+                                    const messageItem2 = document.createElement('div');
+                                    messageItem2.setAttribute('class', 'message my-message');
+                                    messageItem2.textContent = data.message;
+
+                                    textMessage.appendChild(messageItem1);
+                                    messageItem1.appendChild(messageItem2);
+
+                                    chat_history.scrollTop = chat_history.scrollHeight - chat_history.clientHeight;
+                                }
+
+                            }
+
+                        }
+                        )
+
+                        // this functions helps redirect to route /videocall/:friendid when click to camera
+                        function gotoVideoCallPage(friendid) {
                             var url = "/videocall/" + friendid + "/" + roomID;
+                            socket.emit('call-video', { friendID: friendid, reciever_name: nameFriendChatting.textContent, callerID: userID, caller_name: username });
                             socket.emit('leave', { roomID: roomID });
                             window.location.href = url;
-                        } else {
-                            socket.emit('reject-call-video', data);
                         }
-                        setTimeout(() => {
-                            socket.emit('reject-call-video', data);
-                        }, 60000);
-                    }
 
-                })
-                socket.on('response-reject-call-video', data => {
-                    if (data.callerID == userID) {
-                        const text = data.reciever_name.trim() + " đã từ chối cuộc gọi của bạn";
-                        alert(text);
-                    }
-                })
-
-                const chatForm = document.querySelector('#form-message');
-                const chatMes = document.querySelector('#message');
-                const nameFriendChatting = document.querySelector('#nameFriendChatting');
-                const list = document.getElementById("list").querySelectorAll(".clearfix");
-                const text_message = document.getElementById("text-message");
-                const image_message = document.getElementById("image_message");
-                const status = document.getElementById("list").querySelectorAll(".status");
-
-                function clickInputFunction() {
-                    document.getElementById("roomid_img").value = roomID;
-                    image_message.click();
-                }
-                image_message.addEventListener('change', (event) => {
-                    let formData = new FormData();
-
-                    formData.append('room_id', roomID);
-
-                    const promises = [];
-
-                    for (let i = 0; i < event.target.files.length; i++) {
-                        const messageItem1 = document.createElement('li');
-                        messageItem1.setAttribute('class', 'clearfix');
-                        const messageItem2 = document.createElement('div');
-                        messageItem2.setAttribute('class', 'message float-right');
-                        const imageItem = document.createElement('img');
-                        imageItem.setAttribute('id', 'imageItem');
-
-                        textMessage.appendChild(messageItem1);
-                        messageItem1.appendChild(messageItem2);
-                        messageItem2.appendChild(imageItem);
-
-                        imageItem.src = URL.createObjectURL(event.target.files[i]);
-
-                        const promise = fetch(imageItem.src)
-                            .then(Response => Response.blob())
-                            .then(blob => {
-                                formData.append('file', blob);
-                            });
-                        promises.push(promise);
-                    }
-
-                    //The Promise.all() static method takes an iterable of promises as input and returns a single Promise.
-                    //This returned promise fulfills when all of the input's promises fulfill (including when an empty iterable
-                    //is passed), with an array of the fulfillment values. It rejects when any of the input's promises rejects
-                    //with this first rejection reason
-
-                    Promise.all(promises).then(() => {
-                        fetch('/chat/image-message', {
-                            method: 'POST',
-                            body: formData
-                        })
-                            .then(Response => Response.json())
-                            .then(result => {
-                                const message1 = result.message;
-                                for (let i = 0; i < message1.length; i++) {
-                                    const message2 = {
-                                        userID: message1[i][0],
-                                        message: message1[i][1]
-                                    }
-                                    socket.emit('chat-message', message2);
-                                }
-
-                            })
-                    });
-
-                })
-
-                function joinChat(e, friendId) {
-                    friendid = friendId;
-                    for (let i = 0; i < list.length; i++) {
-                        list[i].classList.remove("active");
-                    }
-
-                    e.setAttribute('class', 'clearfix active');
-                    nameFriendChatting.textContent = e.querySelector(".name").textContent;
-
-                    socket.emit('checkID', { userID, friendId });
-
-                    socket.on('roomID', data => { // data have roomID and userID , friendId
-                        roomID = data.room_id;
-                        socket.emit('join', { roomID, userID });
-
-                        fetch(`/chat/${roomID}`, {
-                            method: 'GET',
-                            headers: {
-                                "Content-Type": "application/json"
-                            }
-                        })
-                            .then(Response => Response.json())
-                            .then(data => {
-                                let message = JSON.parse(data.message);
-                                // remove  message of previous people
-                                while (text_message.firstChild) {
-                                    text_message.removeChild(text_message.firstChild);
-                                }
-
-                                for (let i = 0; i < message.length; i++) {
-                                    if (message[i][0] == userID) {
-                                        if (message[i][1].includes("http://res.cloudinary.com/dz1k6vz7m/image/upload/v1")) {
-                                            const messageItem1 = document.createElement('li');
-                                            messageItem1.setAttribute('class', 'clearfix');
-                                            const messageItem2 = document.createElement('div');
-                                            messageItem2.setAttribute('class', 'message float-right');
-                                            const imageItem = document.createElement('img');
-                                            imageItem.setAttribute('id', 'imageItem');
-
-                                            textMessage.appendChild(messageItem1);
-                                            messageItem1.appendChild(messageItem2);
-                                            messageItem2.appendChild(imageItem);
-
-                                            imageItem.src = message[i][1];
+                        socket.on('updateUserStatus', data => {
+                            if (data !== {}) {
+                                for (let i = 0; i < friend.length; i++) {
+                                    if (friend[i].userID == data.userID) {
+                                        if (data.status == 'on') {
+                                            status[i].innerHTML = "<i class='fa fa-circle online'></i> Online";
                                         } else {
-                                            const messageItem1 = document.createElement('li');
-                                            messageItem1.setAttribute('class', 'clearfix');
-
-                                            const messageItem2 = document.createElement('div');
-                                            messageItem2.setAttribute('class', 'message other-message float-right');
-                                            messageItem2.textContent = message[i][1];
-
-                                            textMessage.appendChild(messageItem1);
-                                            messageItem1.appendChild(messageItem2);
+                                            status[i].innerHTML = "<i class='fa fa-circle offline'></i> Offline";
                                         }
+                                    }
+                                }
+                            }
 
+                        })
+
+                        socket.on('send-notification-to-friend', data => {
+                            if (data.friendid == userID) {
+                                if (data.senderID != friendid) {
+                                    let message = '';
+                                    if (data.message.includes("http://res.cloudinary.com/dz1k6vz7m/image/upload/v1")) {
+                                        message = "Hình ảnh"
                                     } else {
-                                        if (message[i][1].includes("http://res.cloudinary.com/dz1k6vz7m/image/upload/v1")) {
-                                            const messageItem1 = document.createElement('li');
-                                            messageItem1.setAttribute('class', 'clearfix');
-
-                                            const imageItem = document.createElement('img');
-                                            imageItem.setAttribute('id', 'imageItem');
-                                            imageItem.setAttribute('class', 'my-message')
-
-                                            textMessage.appendChild(messageItem1);
-                                            messageItem1.appendChild(imageItem);
-
-                                            imageItem.src = message[i][1];
-                                        } else {
-                                            const messageItem1 = document.createElement('li');
-                                            messageItem1.setAttribute('class', 'clearfix');
-
-                                            const messageItem2 = document.createElement('div');
-                                            messageItem2.setAttribute('class', 'message my-message');
-                                            messageItem2.textContent = message[i][1];
-
-                                            textMessage.appendChild(messageItem1);
-                                            messageItem1.appendChild(messageItem2);
-                                        }
-
+                                        message = data.message.slice(0, 40);
                                     }
-                                }
-                            })
-                    })
-                }
-
-
-
-                chatForm.addEventListener('submit', (e) => {
-                    e.preventDefault(); // this will prevent action submiting the form when you click submit button 
-                    var message = chatMes.value;
-                    socket.emit('chat-message', { userID: userID, friendid: friendid, message: message });
-                    chatMes.value = '';
-
-                })
-
-                const textMessage = document.querySelector('#text-message');
-                socket.on('chat-reply', (data) => {
-                    if (data.userID == userID) {
-
-                        if (data.message.includes("http://res.cloudinary.com/dz1k6vz7m/image/upload/v1")) {
-                            const messageItem1 = document.createElement('li');
-                            messageItem1.setAttribute('class', 'clearfix');
-                            const messageItem2 = document.createElement('div');
-                            messageItem2.setAttribute('class', 'message float-right');
-                            const imageItem = document.createElement('img');
-                            imageItem.setAttribute('id', 'imageItem');
-
-                            textMessage.appendChild(messageItem1);
-                            messageItem1.appendChild(messageItem2);
-                            messageItem2.appendChild(imageItem);
-
-                            imageItem.src = data.message;
-                        } else {
-                            const messageItem1 = document.createElement('li');
-                            messageItem1.setAttribute('class', 'clearfix');
-
-                            const messageItem2 = document.createElement('div');
-                            messageItem2.setAttribute('class', 'message other-message float-right');
-                            messageItem2.textContent = data.message;
-
-                            textMessage.appendChild(messageItem1);
-                            messageItem1.appendChild(messageItem2);
-                        }
-                    }
-                    else {
-                        if (data.message.includes("http://res.cloudinary.com/dz1k6vz7m/image/upload/v1")) {
-                            const messageItem1 = document.createElement('li');
-                            messageItem1.setAttribute('class', 'clearfix');
-
-                            const imageItem = document.createElement('img');
-                            imageItem.setAttribute('id', 'imageItem');
-                            imageItem.setAttribute('class', 'my-message')
-
-                            textMessage.appendChild(messageItem1);
-                            messageItem1.appendChild(imageItem);
-
-                            imageItem.src = data.message;
-                        } else {
-                            const messageItem1 = document.createElement('li');
-                            messageItem1.setAttribute('class', 'clearfix');
-
-                            const messageItem2 = document.createElement('div');
-                            messageItem2.setAttribute('class', 'message my-message');
-                            messageItem2.textContent = data.message;
-
-                            textMessage.appendChild(messageItem1);
-                            messageItem1.appendChild(messageItem2);
-                        }
-
-                    }
-
-                }
-                )
-
-                // this functions helps redirect to route /videocall/:friendid when click to camera
-                function gotoVideoCallPage(friendid) {
-                    var url = "/videocall/" + friendid + "/" + roomID;
-                    socket.emit('call-video', { friendID: friendid, reciever_name: nameFriendChatting.textContent, callerID: userID, caller_name: username });
-                    socket.emit('leave', { roomID: roomID });
-                    window.location.href = url;
-                }
-
-                socket.on('updateUserStatus', data => {
-                    if (data !== {}) {
-                        for (let i = 0; i < friend.length; i++) {
-                            if (friend[i].userID == data.userID) {
-                                if (data.status == 'on') {
-                                    status[i].innerHTML = "<i class='fa fa-circle online'></i> Online";
-                                } else {
-                                    status[i].innerHTML = "<i class='fa fa-circle offline'></i> Offline";
+                                    message_notification.textContent = message;
+                                    sender.textContent = data.sender;
+                                    notification_popup.style.display = "block";
+                                    setTimeout(() => {
+                                        notification_popup.style.display = "none";
+                                    }, 4000)
                                 }
                             }
-                        }
-                    }
-
-                })
-                // is fired when user closes tab / browser or navigates to another page event
-                window.addEventListener('beforeunload', function () {
-                    socket.disconnect(true);
-                });
-                // is fired when the browser has lost access to the network
-                window.addEventListener("offline", () => {
-                    socket.disconnect(true);
-                });
-            </script>
+                        })
+                        // is fired when user closes tab / browser or navigates to another page event
+                        window.addEventListener('beforeunload', function () {
+                            socket.disconnect(true);
+                        });
+                        // is fired when the browser has lost access to the network
+                        window.addEventListener("offline", () => {
+                            socket.disconnect(true);
+                        });
+                    </script>
 </body>
 
 </html>

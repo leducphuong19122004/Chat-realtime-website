@@ -6,6 +6,9 @@ import path from 'path';
 import passport from 'passport';
 import { loggedIn } from '../services/authMiddleware.js';
 import jwt from 'jsonwebtoken';
+import { verify } from 'crypto';
+import { verifyEmail } from '../services/email.js';
+import { validateInput } from '../services/utility.js';
 
 
 
@@ -62,7 +65,8 @@ const initWebRoute = (app) => {
     router.post('/login', login);
 
     router.post('/sign-up', register);
-
+    router.get('/verify/:userID/:token', verifyEmail);
+    router.post('/validate', validateInput);
     router.get('/logout', checkingCookie, loggedIn, logout);
 
     // authentication with facebook

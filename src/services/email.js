@@ -23,7 +23,7 @@ client
   .catch((err) => {
     console.log('err happened' + err);
   });
-let emailTemplate = fs.readFileSync('D:\\Nodejs\\src\\views\\templateEmail\\verifyEmail.ejs', 'utf-8'); // Read your EJS template file: Use the fs module to read your EJS template file.
+let emailTemplate = fs.readFileSync('src\\views\\templateEmail\\verifyEmail.ejs', 'utf-8'); // Read your EJS template file: Use the fs module to read your EJS template file.
 let compiledTemplate = ejs.compile(emailTemplate); // Compile your EJS template: Use the compile method of the EJS module to compile your template.
 
 export let sendEmailVerify = async (email, token, userID) => {

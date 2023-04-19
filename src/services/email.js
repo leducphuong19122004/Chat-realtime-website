@@ -23,8 +23,8 @@ client
   .catch((err) => {
     console.log('err happened' + err);
   });
-let emailTemplate = fs.readFileSync(process.env.EMAIL_TEMPLATE_PATH, 'utf-8'); // Read your EJS template file: Use the fs module to read your EJS template file.
-let compiledTemplate = ejs.compile(emailTemplate); // Compile your EJS template: Use the compile method of the EJS module to compile your template.
+// let emailTemplate = fs.readFileSync(process.env.EMAIL_TEMPLATE_PATH, 'utf-8'); // Read your EJS template file: Use the fs module to read your EJS template file.
+// let compiledTemplate = ejs.compile(emailTemplate); // Compile your EJS template: Use the compile method of the EJS module to compile your template.
 
 export let sendEmailVerify = async (email, token, userID) => {
   try {
@@ -32,8 +32,6 @@ export let sendEmailVerify = async (email, token, userID) => {
       userID: userID,
       token: token
     };
-    let emailTemplate = compiledTemplate(variable);
-
     let transporter = nodemailer.createTransport({
       host: process.env.MAIL_HOST,
       port: process.env.MAIL_PORT,
@@ -42,18 +40,24 @@ export let sendEmailVerify = async (email, token, userID) => {
         user: process.env.MAIL_USERNAME,
         pass: process.env.MAIL_PASSWORD,
       },
-    })
+    });
+    fetch('https://raw.githubusercontent.com/leducphuong19122004/Nodejs_project/master/src/views/templateEmail/verifyEmail.ejs')
+      .then(data => data.text())
+      .then(html => {
+        let compiledTemplate = ejs.compile(html); // Compile your EJS template: Use the compile method of the EJS module to compile your template.
+        let emailTemplate = compiledTemplate(variable);
 
-    const message = {
-      from: 'Chat app realtime <process.env.MAIL_FROM_ADDRESS>',
-      to: email,
-      subject: "Verify email",
-      text: "Welcome to chat app realtime ! Please click this link to verify your email https://chat-app-realtime.up.railway.app/verify/" + userID + token,
-      html: emailTemplate
-    }
+        const message = {
+          from: 'Chat app realtime <process.env.MAIL_FROM_ADDRESS>',
+          to: email,
+          subject: "Verify email",
+          text: "Welcome to chat app realtime ! Please click this link to verify your email https://chat-app-realtime.up.railway.app/verify/" + userID + token,
+          html: emailTemplate
+        }
 
-    transporter.sendMail(message).then((info) => {
-    })
+        transporter.sendMail(message).then((info) => {
+        })
+      })
       .catch(error => {
         console.log("error send email :", error);
       })

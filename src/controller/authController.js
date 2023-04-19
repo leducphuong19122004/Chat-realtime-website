@@ -29,7 +29,7 @@ export let register = async (req, res) => {
     try {
         // check email and phone number of new user
         const data = await connection.execute('SELECT * FROM `information_of_users` WHERE email = ? OR mobilenumber = ?', [req.body.email, req.body.mobilenumber]);
-        if (data[0][0] != []) {
+        if (typeof data[0][0] !== 'undefined') {
             res.send({ message: '0' });
         } else {
             // generate random id for user

@@ -58,11 +58,11 @@ User.findBy = async (data, field, attach_additional_data = false) => {
 
 User.login = async (value) => {
     let row = await connection.execute(`SELECT * FROM information_of_users WHERE  email = ?`, [value.email]);
-    if (row[0][0] != []) {
+    if (typeof row[0][0] !== 'undefined') {
         return row[0];
     }
     else {
-       return null;
+        return null;
     }
 };
 

@@ -1,27 +1,24 @@
 import connection from '../configs/connectDB.js';
-import multer from 'multer';
 import jwt from 'jsonwebtoken';
-import * as redis from 'redis';  // Dòng này đc thêm vào để fix lỗi TypeError: Cannot read properties of undefined (reading 'createClient')
 import util from 'util';
 import fs from 'fs';
-import { resolve } from 'path';
-import { rejects } from 'assert';
-import { type } from 'os';
 import { v2 as cloudinary } from 'cloudinary';
-const client = redis.createClient({
-    host: process.env.REDISHOST,
-    port: process.env.REDISPORT,
+
+/****************** Redis connection ***********************/
+import { createClient } from 'redis';
+
+/* Connect to redis cloud */
+const client = createClient({
     password: process.env.REDISPASSWORD,
-    url: process.env.REDIS_URL,
+    socket: {
+        host: process.env.REDISHOST,
+        port: process.env.REDISPORT
+    },
     legacyMode: true
-}); //Thêm lagacyMode để tránh bug là ClientClosedError: The client is closed
+});
 
-client
-    .connect()
-    .catch((err) => {
-        console.log('err happened' + err);
-    });
-
+client.on('error', err => console.log('Redis Client Error', err))
+await client.connect();
 
 export let getStartPage = async (req, res) => {
     return res.render('startPage.ejs');

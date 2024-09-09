@@ -17,36 +17,26 @@ import dotenv from 'dotenv';
 dotenv.config()
 import helmet from 'helmet';
 
+/****************** Redis connection ***********************/
+import { createClient } from 'redis';
 
-// connect redis
-// import connectRedis from './configs/connectRedis';
-// connectRedis.connectRedis();
-
-import redis from 'redis';
-const client = redis.createClient({
-    host: process.env.REDISHOST,
-    port: process.env.REDISPORT,
+/* Connect to redis cloud */
+const client = createClient({
     password: process.env.REDISPASSWORD,
-    url: process.env.REDIS_URL,
+    socket: {
+        host: process.env.REDISHOST,
+        port: process.env.REDISPORT
+    },
     legacyMode: true
 });
 
+client.on('error', err => console.log('Redis Client Error', err))
+await client.connect();
 
-client
-    .connect()
-    .catch((err) => {
-        console.log('err happened' + err);
-    });
-
-;
 
 var app = express();
 
-
-// create a write stream (in append mode)
 var accessLogStream = fs.createWriteStream('access.log', { flags: 'a' })
-// The createWriteStream(path, options) method is an inbuilt application programming interface of fs module which allows to quickly make a writable stream 
-// for the purpose of writing data to a file. This method may be a smarter option compared to methods like fs.writeFile when it comes to very large amounts of data.
 // setup the logger
 app.use(morgan('combined', { stream: accessLogStream }))
 // Helmet helps you secure your Express apps by setting various HTTP headers
@@ -55,7 +45,7 @@ app.use(morgan('combined', { stream: accessLogStream }))
 app.use(express.json()); // for json
 app.use(express.urlencoded({ extended: false }));
 app.use(cors({
-    origin: 'https://chat-app-realtime.up.railway.app', //Chan tat ca cac domain khac ngoai domain nay
+    origin: 'http://localhost', //Chan tat ca cac domain khac ngoai domain nay
     credentials: true //Để bật cookie HTTP qua CORS
 }))
 app.use(cookies());
@@ -65,7 +55,7 @@ app.use(passport.initialize());
 passport.use(new FacebookStrategy({
     clientID: process.env.FACEBOOK_ID,
     clientSecret: process.env.FACEBOOK_SECRET,
-    callbackURL: "https://chat-app-realtime.up.railway.app/auth/facebook/callback",
+    callbackURL: "http://localhost/auth/facebook/callback",
     enableProof: true, // We also set enableProof: true to include a proof of authentication in the access token.
     profileFields: ['id', 'email', 'gender', 'link', 'locale', 'displayName', 'timezone', 'updated_time', 'verified']
 }, function (accessToken, refeshToken, profile, done) { // this function must have 4 parameters, refresh token is optional paramesters
@@ -83,7 +73,7 @@ passport.use(new FacebookStrategy({
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_ID,
     clientSecret: process.env.GOOGLE_SECRET,
-    callbackURL: "https://chat-app-realtime.up.railway.app/auth/google/callback",
+    callbackURL: "http://localhost/auth/google/callback",
     enableProof: true, // We also set enableProof: true to include a proof of authentication in the access token.
     profileFields: ['id', 'email', 'gender', 'link', 'locale', 'displayName', 'timezone', 'updated_time', 'verified']
 }, function (accessToken, refeshToken, profile, done) { // this function must have 4 parameters, refresh token is optional paramesters

@@ -6,23 +6,24 @@ dotenv.config();
 import { NotFoundError } from "../services/utility.js";
 import { sendEmailVerify } from '../services/email.js';
 import { v4 as uuidv4 } from 'uuid';
-import * as redis from 'redis'; // Dòng này đc thêm vào để fix lỗi TypeError: Cannot read properties of undefined (reading 'createClient')
 import checkingUser from '../configs/connectDB_passportjs.js';
 import connection from '../configs/connectDB.js';
 
-const client = redis.createClient({
-    host: process.env.REDISHOST,
-    port: process.env.REDISPORT,
-    password: process.env.REDISPASSWORD,
-    url: process.env.REDIS_URL,
-    legacyMode: true
-}); //Thêm lagacyMode để tránh bug là ClientClosedError: The client is closed
+/****************** Redis connection ***********************/
+import { createClient } from 'redis';
 
-client
-    .connect()
-    .catch((err) => {
-        console.log('err happened' + err);
-    });
+/* Connect to redis cloud */
+const client = createClient({
+    password: process.env.REDISPASSWORD,
+    socket: {
+        host: process.env.REDISHOST,
+        port: process.env.REDISPORT
+    },
+    legacyMode: true
+});
+
+client.on('error', err => console.log('Redis Client Error', err))
+await client.connect();
 
 // Register a new User
 export let register = async (req, res) => {
